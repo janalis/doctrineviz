@@ -73,24 +73,20 @@ class DoctrinevizCommand extends ContainerAwareCommand
                 $table->addRecord(new Record($metadata->getFieldMapping($fieldName)['columnName']));
             }, $metadata->getFieldNames());
             $tables[$entity] = $table;
-        }
-        // Add edges
-        foreach ($entities as $entity) {
-            $metadata = $em->getClassMetadata($entity);
             foreach ($metadata->getAssociationMappings() as $associationMapping) {
                 $targetEntity = $associationMapping['targetEntity'];
                 if (!array_key_exists($targetEntity, $tables) || !array_key_exists('sourceToTargetKeyColumns', $associationMapping)) {
                     continue;
                 }
                 $columns = $associationMapping['sourceToTargetKeyColumns'];
-                $from = $graph->getVertex($tables[$entity]->getId())->getRecord(array_values($columns)[0]);
+                $from = $graph->getVertex($tables[$entity]->getId())->getRecord(array_keys($columns)[0]);
                 if (!$from) {
-                    $from = new Record(array_values($columns)[0]);
+                    $from = new Record(array_keys($columns)[0]);
                     $tables[$entity]->addRecord($from);
                 }
-                $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord(array_keys($columns)[0]);
+                $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord(array_values($columns)[0]);
                 if (!$to) {
-                    $to = new Record(array_keys($columns)[0]);
+                    $to = new Record(array_values($columns)[0]);
                     $tables[$targetEntity]->addRecord($to);
                 }
                 $from->addEdgeTo($to);
