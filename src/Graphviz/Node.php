@@ -28,8 +28,9 @@ abstract class Node
      *
      * @return array
      */
-    protected function indentAll(array $strings, $spaces = 2)
+    protected function indentAll(array $strings = null, $spaces = 2)
     {
+        $strings = $strings ?: [];
         foreach ($strings as $key => $string) {
             $strings[$key] = $this->indent($string, $spaces);
         }
@@ -40,8 +41,8 @@ abstract class Node
     /**
      * Indent.
      *
-     * @param sting $string
-     * @param int   $spaces
+     * @param string $string
+     * @param int    $spaces
      *
      * @return string
      */

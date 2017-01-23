@@ -17,10 +17,10 @@ namespace Janalis\Doctrineviz\Graphviz;
 
 class Edge
 {
-    /** @var Vertex */
+    /** @var Vertex|Record */
     protected $from;
 
-    /** @var Vertex */
+    /** @var Vertex|Record */
     protected $to;
 
     /*
@@ -28,28 +28,28 @@ class Edge
      */
     public function __toString()
     {
-        return "{$this->getVertexId($this->from)} -> {$this->getVertexId($this->to)};";
+        return "{$this->getId($this->from)} -> {$this->getId($this->to)};";
     }
 
     /**
      * Get vertex id.
      *
-     * @param Vertex $vertex
+     * @param Vertex|Record $element
      *
      * @return string
      */
-    protected function getVertexId(Vertex $vertex)
+    protected function getId($element)
     {
-        return ($vertex->getParent() ? $vertex->getParent()->getId() : '').":{$vertex->getId()}";
+        return ($element instanceof Record ? $element->getVertex()->getId() : '').":{$element->getId()}";
     }
 
     /**
      * Edge constructor.
      *
-     * @param Vertex $from
-     * @param Vertex $to
+     * @param Vertex|Record $from
+     * @param Vertex|Record $to
      */
-    public function __construct(Vertex $from, Vertex $to)
+    public function __construct($from, $to)
     {
         $this->from = $from;
         $this->to = $to;
@@ -58,7 +58,7 @@ class Edge
     /**
      * Get from.
      *
-     * @return Vertex
+     * @return Vertex|Record
      */
     public function getFrom()
     {
@@ -68,7 +68,7 @@ class Edge
     /**
      * Set from.
      *
-     * @param Vertex $from
+     * @param Vertex|Record $from
      */
     public function setFrom($from)
     {
@@ -78,7 +78,7 @@ class Edge
     /**
      * Get to.
      *
-     * @return Vertex
+     * @return Vertex|Record
      */
     public function getTo()
     {
@@ -88,7 +88,7 @@ class Edge
     /**
      * Set to.
      *
-     * @param Vertex $to
+     * @param Vertex|Record $to
      */
     public function setTo($to)
     {

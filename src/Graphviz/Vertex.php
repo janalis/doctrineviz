@@ -17,26 +17,19 @@ namespace Janalis\Doctrineviz\Graphviz;
 
 class Vertex extends Node
 {
+    use Edgeable;
+
     /** @var string */
     protected $id;
 
-    /** @var Vertex */
-    protected $parent;
-
-    /** @var Vertex[] */
-    protected $children = [];
-
-    /** @var Graph */
-    protected $graph;
+    /** @var Record[] */
+    protected $records = [];
 
     /**
      * @return string
      */
     public function __toString()
     {
-        if ($this->parent) {
-            return "<$this->id>$this->id";
-        }
         $this->buildAttributes();
 
         return "$this->id [\r\n".
@@ -59,7 +52,7 @@ class Vertex extends Node
      */
     protected function buildAttributes()
     {
-        $this->setAttribute('label', count($this->children) ? mb_convert_case($this->id, MB_CASE_UPPER).'|'.implode('|', $this->children) : $this->id);
+        $this->setAttribute('label', count($this->records) ? mb_convert_case($this->id, MB_CASE_UPPER).'|'.implode('|', $this->records) : $this->id);
     }
 
     /**
@@ -83,121 +76,52 @@ class Vertex extends Node
     }
 
     /**
-     * Get parent.
+     * Get records.
      *
-     * @return Vertex
+     * @return Record[]
      */
-    public function getParent()
+    public function getRecords()
     {
-        return $this->parent;
+        return $this->records;
     }
 
     /**
-     * Set parent.
+     * Set records.
      *
-     * @param Vertex $parent
+     * @param Record[] $records
      */
-    public function setParent($parent)
+    public function setRecords($records)
     {
-        $this->parent = $parent;
-    }
-
-    /**
-     * Get children.
-     *
-     * @return Vertex[]
-     */
-    public function getChildren()
-    {
-        return $this->children;
-    }
-
-    /**
-     * Set children.
-     *
-     * @param Vertex[] $children
-     */
-    public function setChildren($children)
-    {
-        foreach ($children as $child) {
-            $child->addChild($child);
+        foreach ($records as $record) {
+            $this->addRecord($record);
         }
     }
 
     /**
-     * Add child.
+     * Add record.
      *
-     * @param Vertex $child
+     * @param Record $record
      */
-    public function addChild(Vertex $child)
+    public function addRecord(Record $record)
     {
-        if ($this->parent) {
-            throw new \InvalidArgumentException('Vertex can only have one ancestor');
-        }
-        $child->setGraph($this->graph);
-        $child->setParent($this);
-        $this->children[$child->getId()] = $child;
+        $record->setGraph($this->graph);
+        $record->setVertex($this);
+        $this->records[$record->getId()] = $record;
     }
 
     /**
-     * Get child.
+     * Get record.
      *
      * @param $id
      *
-     * @return Vertex
+     * @return Record
      */
-    public function getChild($id)
+    public function getRecord($id)
     {
-        if (!array_key_exists($id, $this->children)) {
+        if (!array_key_exists($id, $this->records)) {
             return null;
         }
 
-        return $this->children[$id];
-    }
-
-    /**
-     * Get graph.
-     *
-     * @return Graph
-     */
-    public function getGraph()
-    {
-        return $this->graph;
-    }
-
-    /**
-     * Set graph.
-     *
-     * @param Graph $graph
-     */
-    public function setGraph($graph)
-    {
-        $this->graph = $graph;
-    }
-
-    /**
-     * Add edge to.
-     *
-     * @param Vertex $vertex
-     */
-    public function addEdgeTo(Vertex $vertex)
-    {
-        if (!$this->graph) {
-            throw new \RuntimeException('Graph is not defined');
-        }
-        $this->graph->setEdge(new Edge($this, $vertex));
-    }
-
-    /**
-     * Add edge from.
-     *
-     * @param Vertex $vertex
-     */
-    public function addEdgeFrom(Vertex $vertex)
-    {
-        if (!$this->graph) {
-            throw new \RuntimeException('Graph is not defined');
-        }
-        $this->graph->setEdge(new Edge($vertex, $this));
+        return $this->records[$id];
     }
 }

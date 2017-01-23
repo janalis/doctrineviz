@@ -18,6 +18,7 @@ namespace Janalis\Doctrineviz\Command;
 use Doctrine\ORM\EntityManager;
 use Janalis\Doctrineviz\Graphviz\Graph;
 use Janalis\Doctrineviz\Graphviz\Graphviz;
+use Janalis\Doctrineviz\Graphviz\Record;
 use Janalis\Doctrineviz\Graphviz\Vertex;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,13 +30,15 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DoctrinevizCommand extends ContainerAwareCommand
 {
+    const NAME = 'doctrine:generate:viz';
+
     /**
      * Configure.
      */
     protected function configure()
     {
         $this
-            ->setName('doctrine:generate:viz')
+            ->setName(static::NAME)
             ->setHelp('Generates database mapping')
             ->addOption('pattern', 'p', InputOption::VALUE_OPTIONAL, 'Filter entities that match that PCRE pattern', '.*')
         ;
@@ -67,7 +70,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
             $table->setAttribute('shape', 'record');
             $table->setAttribute('width', '4');
             array_map(function ($fieldName) use ($metadata, $table) {
-                $table->addChild(new Vertex($metadata->getFieldMapping($fieldName)['columnName']));
+                $table->addRecord(new Record($metadata->getFieldMapping($fieldName)['columnName']));
             }, $metadata->getFieldNames());
             $tables[$entity] = $table;
         }
@@ -80,15 +83,15 @@ class DoctrinevizCommand extends ContainerAwareCommand
                     continue;
                 }
                 $columns = $associationMapping['sourceToTargetKeyColumns'];
-                $from = $graph->getVertex($tables[$entity]->getId())->getChild(array_keys($columns)[0]);
+                $from = $graph->getVertex($tables[$entity]->getId())->getRecord(array_values($columns)[0]);
                 if (!$from) {
-                    $from = new Vertex(array_keys($columns)[0]);
-                    $tables[$entity]->addChild($from);
+                    $from = new Record(array_values($columns)[0]);
+                    $tables[$entity]->addRecord($from);
                 }
-                $to = $graph->getVertex($tables[$targetEntity]->getId())->getChild(array_values($columns)[0]);
+                $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord(array_keys($columns)[0]);
                 if (!$to) {
-                    $to = new Vertex(array_values($columns)[0]);
-                    $tables[$targetEntity]->addChild($to);
+                    $to = new Record(array_keys($columns)[0]);
+                    $tables[$targetEntity]->addRecord($to);
                 }
                 $from->addEdgeTo($to);
             }
