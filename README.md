@@ -2,6 +2,10 @@
 
 Render a graphical representation of a Doctrine2 mapped database.
 
+## Example
+
+![Example](example.png)
+
 ## To do
 
 - [ ] Add phpunit tests
