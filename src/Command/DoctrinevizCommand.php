@@ -63,33 +63,78 @@ class DoctrinevizCommand extends ContainerAwareCommand
         $graph->setAttribute('ranksep', '3');
         /** @var Vertex[] $tables */
         $tables = [];
-        // Add vertices
         foreach ($entities as $entity) {
             $metadata = $em->getClassMetadata($entity);
             $table = $graph->createVertex($metadata->getTableName());
             $table->setAttribute('shape', 'record');
             $table->setAttribute('width', '4');
             array_map(function ($fieldName) use ($metadata, $table) {
-                $table->addRecord(new Record($metadata->getFieldMapping($fieldName)['columnName']));
+                $fieldMapping = $metadata->getFieldMapping($fieldName);
+                $table->addRecord(new Record($fieldMapping['columnName']));
             }, $metadata->getFieldNames());
             $tables[$entity] = $table;
+        }
+        foreach ($entities as $entity) {
+            $metadata = $em->getClassMetadata($entity);
             foreach ($metadata->getAssociationMappings() as $associationMapping) {
-                $targetEntity = $associationMapping['targetEntity'];
-                if (!array_key_exists($targetEntity, $tables) || !array_key_exists('sourceToTargetKeyColumns', $associationMapping)) {
-                    continue;
+                if (array_key_exists('joinTable', $associationMapping) && $associationMapping['joinTable']) {
+                    $joinTable = $associationMapping['joinTable'];
+                    $table = $graph->createVertex($joinTable['name']);
+                    $table->setAttribute('shape', 'record');
+                    $table->setAttribute('width', '4');
+                    if (array_key_exists('joinColumns', $joinTable)) {
+                        $sourceEntity = $associationMapping['sourceEntity'];
+                        $joinColumns = $joinTable['joinColumns'];
+                        foreach ($joinColumns as $joinColumn) {
+                            $record = new Record($joinColumn['name']);
+                            $table->addRecord($record);
+                            if (array_key_exists($sourceEntity, $tables)) {
+                                $name = $joinColumn['referencedColumnName'];
+                                $to = $graph->getVertex($tables[$sourceEntity]->getId())->getRecord($name);
+                                if (!$to) {
+                                    $to = new Record($name);
+                                    $tables[$sourceEntity]->addRecord($to);
+                                }
+                            }
+                            $record->addEdgeTo($to);
+                        }
+                    }
+                    if (array_key_exists('inverseJoinColumns', $joinTable)) {
+                        $targetEntity = $associationMapping['targetEntity'];
+                        $inverseJoinColumns = $joinTable['inverseJoinColumns'];
+                        foreach ($inverseJoinColumns as $inverseJoinColumn) {
+                            $record = new Record($inverseJoinColumn['name']);
+                            $table->addRecord($record);
+                            if (array_key_exists($targetEntity, $tables)) {
+                                $name = $inverseJoinColumn['referencedColumnName'];
+                                $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord($name);
+                                if (!$to) {
+                                    $to = new Record($name);
+                                    $tables[$targetEntity]->addRecord($to);
+                                }
+                            }
+                            $record->addEdgeTo($to);
+                        }
+                    }
+                    $tables[$table->getId()] = $table;
+                } else {
+                    $targetEntity = $associationMapping['targetEntity'];
+                    if (!array_key_exists($targetEntity, $tables) || !array_key_exists('sourceToTargetKeyColumns', $associationMapping)) {
+                        continue;
+                    }
+                    $columns = $associationMapping['sourceToTargetKeyColumns'];
+                    $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord(array_values($columns)[0]);
+                    if (!$to) {
+                        $to = new Record(array_values($columns)[0]);
+                        $tables[$targetEntity]->addRecord($to);
+                    }
+                    $from = $graph->getVertex($tables[$entity]->getId())->getRecord(array_keys($columns)[0]);
+                    if (!$from) {
+                        $from = new Record(array_keys($columns)[0]);
+                        $tables[$entity]->addRecord($from);
+                    }
+                    $from->addEdgeTo($to);
                 }
-                $columns = $associationMapping['sourceToTargetKeyColumns'];
-                $from = $graph->getVertex($tables[$entity]->getId())->getRecord(array_keys($columns)[0]);
-                if (!$from) {
-                    $from = new Record(array_keys($columns)[0]);
-                    $tables[$entity]->addRecord($from);
-                }
-                $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord(array_values($columns)[0]);
-                if (!$to) {
-                    $to = new Record(array_values($columns)[0]);
-                    $tables[$targetEntity]->addRecord($to);
-                }
-                $from->addEdgeTo($to);
             }
         }
         $graphviz = new Graphviz();

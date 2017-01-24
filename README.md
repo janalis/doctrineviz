@@ -6,7 +6,6 @@ Render a graphical representation of a Doctrine2 mapped database.
 
 - [ ] Add phpunit tests
 - [ ] Add output options
-- [ ] Add many to many relationships support
 - [ ] Add mongoDB support
 
 ## Installation
