@@ -31,15 +31,18 @@ class Graphviz
     protected $format;
 
     /** @var string */
-    protected $executable;
+    protected $binary;
 
     /**
      * Graphviz constructor.
+     *
+     * @param string $format
+     * @param string $binary
      */
-    public function __construct()
+    public function __construct($format = 'png', $binary = null)
     {
-        $this->format = 'png';
-        $this->executable = 'dot'.(0 === strpos(strtoupper(PHP_OS), 'WIN') ? '.exe' : '');
+        $this->format = $format ?: 'png';
+        $this->binary = $binary ?: 'dot'.(0 === strpos(strtoupper(PHP_OS), 'WIN') ? '.exe' : '');
     }
 
     /**
@@ -59,9 +62,9 @@ class Graphviz
         if (false === file_put_contents($tmp, (string) $graph, LOCK_EX)) {
             throw new \UnexpectedValueException('Unable to write graphviz script to temporary file');
         }
-        system(escapeshellarg($this->executable).' -T '.escapeshellarg($this->format).' '.escapeshellarg($tmp).' -o '.escapeshellarg($tmp.'.'.$this->format), $return_var);
+        system(escapeshellarg($this->binary).' -T '.escapeshellarg($this->format).' '.escapeshellarg($tmp).' -o '.escapeshellarg($tmp.'.'.$this->format), $return_var);
         if (0 !== $return_var) {
-            throw new \UnexpectedValueException('Unable to invoke "'.$this->executable.'" to create image file (code '.$return_var.')');
+            throw new \UnexpectedValueException('Unable to invoke "'.$this->binary.'" to create image file (code '.$return_var.')');
         }
         unlink($tmp);
 
@@ -161,22 +164,22 @@ class Graphviz
     }
 
     /**
-     * Get executable.
+     * Get binary.
      *
      * @return string
      */
-    public function getExecutable()
+    public function getBinary()
     {
-        return $this->executable;
+        return $this->binary;
     }
 
     /**
-     * Set executable.
+     * Set binary.
      *
-     * @param string $executable
+     * @param string $binary
      */
-    public function setExecutable($executable)
+    public function setBinary($binary)
     {
-        $this->executable = $executable;
+        $this->binary = $binary;
     }
 }

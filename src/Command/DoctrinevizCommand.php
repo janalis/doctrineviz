@@ -41,6 +41,9 @@ class DoctrinevizCommand extends ContainerAwareCommand
             ->setName(static::NAME)
             ->setHelp('Generates database mapping')
             ->addOption('pattern', 'p', InputOption::VALUE_OPTIONAL, 'Filter entities that match that PCRE pattern', '.*')
+            ->addOption('binary', 'b', InputOption::VALUE_OPTIONAL, 'Path to graphviz dot binary')
+            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format', 'png')
+            ->addOption('output-path', 'o', InputOption::VALUE_OPTIONAL, 'Output path')
         ;
     }
 
@@ -137,7 +140,20 @@ class DoctrinevizCommand extends ContainerAwareCommand
                 }
             }
         }
-        $graphviz = new Graphviz();
-        $graphviz->display($graph);
+        $format = $input->getOption('format', 'png');
+        $binary = $input->getOption('binary', null);
+        $path = $input->getOption('output-path', null);
+        $graphviz = new Graphviz($format, $binary);
+        if (!$path) {
+            $graphviz->display($graph);
+
+            return 0;
+        }
+        $dotted = 'dot' === $format ? (string) $graph : $graphviz->createImageData($graph);
+        if ($path) {
+            return !file_put_contents($path, $dotted);
+        }
+
+        $output->write($dotted);
     }
 }
