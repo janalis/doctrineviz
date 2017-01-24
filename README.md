@@ -14,6 +14,29 @@ Require package through composer:
 $ composer require janalis/doctrineviz
 ```
 
+Then, enable the bundle by adding the following line in the `app/AppKernel.php` file of your project:
+```php
+// app/AppKernel.php
+
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        //...
+        if (in_array($this->getEnvironment(), ['dev', 'test'])) {
+            // ...
+            // Because the vendor code could be not present, you should check if the bundle is here before using it.
+            new Janalis\Doctrineviz\DoctrinevizBundle(),
+        }
+
+
+        // ...
+    }
+
+    // ...
+}
+```
+
 In order to be able to use the graph drawing feature you'll have to install GraphViz (dot executable).
 
 ### Mac OS
@@ -32,11 +55,11 @@ $ sudo apt install -y graphviz
 
 Windows users may [download GraphViZ for Windows](http://www.graphviz.org/Download_windows.php).
 
-## Use
+## Usage
 
 Into your symfony project:
 ```bash
-$ php app/console doctrine:generate:viz
+$ php app/console doctrine:generate:viz --help
 ```
 
 ## Credits
