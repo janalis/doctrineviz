@@ -144,16 +144,16 @@ class DoctrinevizCommand extends ContainerAwareCommand
         $binary = $input->getOption('binary', null);
         $path = $input->getOption('output-path', null);
         $graphviz = new Graphviz($format, $binary);
-        if (!$path) {
+        if (!$path && 'dot' === $format) {
+            $output->writeln((string) $graph);
+
+            return 0;
+        } elseif (!$path) {
             $graphviz->display($graph);
 
             return 0;
+        } else {
+            return !file_put_contents($path, $graphviz->createImageData($graph));
         }
-        $dotted = 'dot' === $format ? (string) $graph : $graphviz->createImageData($graph);
-        if ($path) {
-            return !file_put_contents($path, $dotted);
-        }
-
-        $output->write($dotted);
     }
 }
