@@ -28,13 +28,13 @@ class Graph extends Node
      */
     public function __toString()
     {
-        return "digraph g {\r\n".
-            implode("\r\n", $this->indentAll($this->attributes)).
-            "\r\n".
-            implode("\r\n", $this->indentAll($this->vertices)).
-            "\r\n".
-            implode("\r\n", $this->indentAll($this->edges)).
-            "\r\n}";
+        return 'digraph g {'.PHP_EOL.
+            implode(PHP_EOL, $this->indentAll($this->attributes)).
+            PHP_EOL.
+            implode(PHP_EOL, $this->indentAll($this->vertices)).
+            PHP_EOL.
+            implode(PHP_EOL, $this->indentAll($this->edges)).
+            PHP_EOL.'}';
     }
 
     /**

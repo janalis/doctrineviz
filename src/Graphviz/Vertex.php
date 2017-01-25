@@ -32,9 +32,9 @@ class Vertex extends Node
     {
         $this->buildAttributes();
 
-        return "$this->id [\r\n".
-            implode("\r\n", $this->indentAll($this->attributes)).
-            "\r\n]";
+        return "$this->id [".PHP_EOL.
+            implode(PHP_EOL, $this->indentAll($this->attributes)).
+            PHP_EOL.']';
     }
 
     /**

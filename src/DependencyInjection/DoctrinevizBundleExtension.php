@@ -26,6 +26,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class DoctrinevizBundleExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function prepend(ContainerBuilder $container)
     {
         $requiredBundles = [

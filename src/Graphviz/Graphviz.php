@@ -106,6 +106,9 @@ class Graphviz
      */
     public function createImageData(Graph $graph)
     {
+        if ('dot' === $this->format) {
+            return (string) $graph;
+        }
         $file = $this->createImageFile($graph);
         $data = file_get_contents($file);
         unlink($file);

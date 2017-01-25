@@ -50,7 +50,7 @@ abstract class Node
     {
         $pad = str_repeat(' ', $spaces);
 
-        return $pad.implode("\r\n$pad", explode("\r\n", $string));
+        return $pad.implode(PHP_EOL."$pad", explode(PHP_EOL, $string));
     }
 
     /**

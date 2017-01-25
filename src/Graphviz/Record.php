@@ -16,7 +16,7 @@ class Record
      */
     public function __toString()
     {
-        return "<$this->id>$this->id";
+        return "<$this->id> $this->id\\l";
     }
 
     /**
