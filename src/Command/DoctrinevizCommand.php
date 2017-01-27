@@ -62,15 +62,15 @@ class DoctrinevizCommand extends ContainerAwareCommand
             return preg_match($pattern, $entity);
         });
         $graph = new Graph();
-        $graph->setAttribute('rankdir', 'LR');
-        $graph->setAttribute('ranksep', '3');
+        $graph->createAttribute('rankdir', 'LR');
+        $graph->createAttribute('ranksep', '3');
         /** @var Vertex[] $tables */
         $tables = [];
         foreach ($entities as $entity) {
             $metadata = $em->getClassMetadata($entity);
             $table = $graph->createVertex($metadata->getTableName());
-            $table->setAttribute('shape', 'record');
-            $table->setAttribute('width', '4');
+            $table->createAttribute('shape', 'record');
+            $table->createAttribute('width', '4');
             array_map(function ($fieldName) use ($metadata, $table) {
                 $fieldMapping = $metadata->getFieldMapping($fieldName);
                 $table->addRecord(new Record($fieldMapping['columnName']));
@@ -83,8 +83,8 @@ class DoctrinevizCommand extends ContainerAwareCommand
                 if (array_key_exists('joinTable', $associationMapping) && $associationMapping['joinTable']) {
                     $joinTable = $associationMapping['joinTable'];
                     $table = $graph->createVertex($joinTable['name']);
-                    $table->setAttribute('shape', 'record');
-                    $table->setAttribute('width', '4');
+                    $table->createAttribute('shape', 'record');
+                    $table->createAttribute('width', '4');
                     if (array_key_exists('joinColumns', $joinTable)) {
                         $sourceEntity = $associationMapping['sourceEntity'];
                         $joinColumns = $joinTable['joinColumns'];

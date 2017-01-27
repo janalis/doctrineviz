@@ -1,1 +1,5 @@
+/env/cache/
+/env/logs/
 /vendor/
+/env/config/parameters.yml
+/phpunit.xml

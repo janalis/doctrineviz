@@ -50,7 +50,20 @@ trait Edgeable
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
         }
-        $this->graph->setEdge(new Edge($this, $element));
+        $this->graph->addEdge(new Edge($this, $element));
+    }
+
+    /**
+     * Remove edge to.
+     *
+     * @param Vertex|Record $element
+     */
+    public function removeEdgeTo($element)
+    {
+        if (!$this->graph) {
+            throw new \RuntimeException('Graph is not defined');
+        }
+        $this->graph->removeEdge(new Edge($this, $element));
     }
 
     /**
@@ -63,6 +76,19 @@ trait Edgeable
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
         }
-        $this->graph->setEdge(new Edge($element, $this));
+        $this->graph->addEdge(new Edge($element, $this));
+    }
+
+    /**
+     * Remove edge from.
+     *
+     * @param Vertex|Record $element
+     */
+    public function removeEdgeFrom($element)
+    {
+        if (!$this->graph) {
+            throw new \RuntimeException('Graph is not defined');
+        }
+        $this->graph->removeEdge(new Edge($element, $this));
     }
 }
