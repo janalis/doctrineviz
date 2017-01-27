@@ -68,13 +68,16 @@ class DoctrinevizCommand extends ContainerAwareCommand
         $tables = [];
         foreach ($entities as $entity) {
             $metadata = $em->getClassMetadata($entity);
+            if (!$metadata->getFieldNames()) {
+                continue;
+            }
             $table = $graph->createVertex($metadata->getTableName());
             $table->createAttribute('shape', 'record');
             $table->createAttribute('width', '4');
-            array_map(function ($fieldName) use ($metadata, $table) {
+            foreach ($metadata->getFieldNames() as $fieldName) {
                 $fieldMapping = $metadata->getFieldMapping($fieldName);
                 $table->addRecord(new Record($fieldMapping['columnName']));
-            }, $metadata->getFieldNames());
+            }
             $tables[$entity] = $table;
         }
         foreach ($entities as $entity) {
