@@ -13,3 +13,7 @@ install:
   - mv env/config/parameters.yml.dist env/config/parameters.yml
   - composer install
   - php env/console doctrine:schema:create
+script:
+  - phpunit --coverage-clover clover.xml
+after_script:
+  - php vendor/bin/coveralls -v

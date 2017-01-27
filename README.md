@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/janalis/doctrineviz.svg?branch=master)](https://travis-ci.org/janalis/doctrineviz)
 [![SensioLabs Insight](https://img.shields.io/sensiolabs/i/dc69f3e1-060d-4ac8-9fb2-94ced25992f2.svg)](https://insight.sensiolabs.com/projects/dc69f3e1-060d-4ac8-9fb2-94ced25992f2)
+[![Coverage Status](https://coveralls.io/repos/github/janalis/doctrineviz/badge.svg?branch=master)](https://coveralls.io/github/janalis/doctrineviz?branch=master)
 
 Render a graphical representation of a Doctrine2 mapped database.
 
