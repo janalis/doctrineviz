@@ -1,5 +1,7 @@
 # doctrineviz
 
+[![Build Status](https://travis-ci.org/janalis/doctrineviz.svg?branch=master)](https://travis-ci.org/janalis/doctrineviz)
+
 Render a graphical representation of a Doctrine2 mapped database.
 
 ## Example

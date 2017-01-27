@@ -1,0 +1,15 @@
+language: php
+services:
+  - mysql
+php:
+  - '5.6'
+  - '7.0'
+  - '7.1'
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install graphviz
+  - mysql -e 'CREATE DATABASE doctrineviz;'
+install:
+  - mv env/config/parameters.yml.dist env/config/parameters.yml
+  - composer install
+  - php env/console doctrine:schema:create
