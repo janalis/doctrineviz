@@ -50,6 +50,6 @@ class DoctrinevizBundleExtension extends Extension implements PrependExtensionIn
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration($this->getAlias());
-        $config = $this->processConfiguration($configuration, $configs);
+        $this->processConfiguration($configuration, $configs);
     }
 }

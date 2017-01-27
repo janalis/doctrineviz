@@ -120,7 +120,7 @@ abstract class Node
      *
      * @param Attribute $attribute
      */
-    public function addAttribute($attribute)
+    public function addAttribute(Attribute $attribute)
     {
         $this->attributes[$attribute->getId()] = $attribute;
     }
@@ -130,7 +130,7 @@ abstract class Node
      *
      * @param Attribute $attribute
      */
-    public function removeAttribute($attribute)
+    public function removeAttribute(Attribute $attribute)
     {
         unset($this->attributes[$attribute->getId()]);
     }
