@@ -15,6 +15,8 @@
 
 namespace Janalis\Doctrineviz\Graphviz;
 
+use Symfony\Component\Process\Process;
+
 /**
  * Graphviz.
  *
@@ -25,8 +27,6 @@ namespace Janalis\Doctrineviz\Graphviz;
  */
 class Graphviz
 {
-    const DELAY_OPEN = 2.0;
-
     /** @var string */
     protected $format;
 
@@ -56,16 +56,14 @@ class Graphviz
      */
     public function createImageFile(Graph $graph)
     {
-        if (false === $tmp = tempnam(sys_get_temp_dir(), 'graphviz')) {
+        if (false === $tmp = tempnam(sys_get_temp_dir(), 'doctrineviz')) {
             throw new \UnexpectedValueException('Unable to get temporary file name for graphviz script');
         }
         if (false === file_put_contents($tmp, (string) $graph, LOCK_EX)) {
             throw new \UnexpectedValueException('Unable to write graphviz script to temporary file');
         }
-        system(escapeshellarg($this->binary).' -T '.escapeshellarg($this->format).' '.escapeshellarg($tmp).' -o '.escapeshellarg($tmp.'.'.$this->format), $return_var);
-        if (0 !== $return_var) {
-            throw new \UnexpectedValueException('Unable to invoke "'.$this->binary.'" to create image file (code '.$return_var.')');
-        }
+        $process = new Process(escapeshellarg($this->binary).' -T '.escapeshellarg($this->format).' '.escapeshellarg($tmp).' -o '.escapeshellarg($tmp.'.'.$this->format));
+        $process->mustRun();
         unlink($tmp);
 
         return $tmp.'.'.$this->format;
@@ -79,22 +77,18 @@ class Graphviz
     public function display(Graph $graph)
     {
         $path = $this->createImageFile($graph);
-        static $next = 0;
-        if ($next > microtime(true)) {
-            // wait some time between calling xdg-open because earlier calls will be ignored otherwise
-            sleep(self::DELAY_OPEN);
-        }
         if (0 === strpos(strtoupper(PHP_OS), 'WIN')) {
             // open image in untitled, temporary background shell
-            exec('start "" '.escapeshellarg($path).' >NUL');
+            $command = 'start';
         } elseif ('DARWIN' === strtoupper(PHP_OS)) {
             // open image in background (redirect stdout to /dev/null, sterr to stdout and run in background)
-            exec('open '.escapeshellarg($path).' > /dev/null 2>&1 &');
+            $command = 'open';
         } else {
             // open image in background (redirect stdout to /dev/null, sterr to stdout and run in background)
-            exec('xdg-open '.escapeshellarg($path).' > /dev/null 2>&1 &');
+            $command = 'xdg-open';
         }
-        $next = microtime(true) + self::DELAY_OPEN;
+        $process = new Process($command.' '.escapeshellarg($path));
+        $process->mustRun();
     }
 
     /**
