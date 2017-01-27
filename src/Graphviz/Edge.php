@@ -40,7 +40,7 @@ class Edge
      */
     protected function getId($element)
     {
-        return ($element instanceof Record ? $element->getVertex()->getId() : '').":{$element->getId()}";
+        return $element instanceof Record ? "{$element->getVertex()->getId()}:{$element->getId()}" : "{$element->getId()}";
     }
 
     /**

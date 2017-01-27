@@ -28,36 +28,35 @@ class Graph extends Node
      */
     public function __toString()
     {
-        return 'digraph g {'.PHP_EOL.
-            implode(PHP_EOL, $this->indentAll($this->attributes)).
-            PHP_EOL.
-            implode(PHP_EOL, $this->indentAll($this->vertices)).
-            PHP_EOL.
-            implode(PHP_EOL, $this->indentAll($this->edges)).
-            PHP_EOL.'}';
+        return 'digraph g {'.PHP_EOL.(!count($this->getAttributes()) ? '' :
+            implode(PHP_EOL, $this->indentAll($this->getAttributes())).
+            PHP_EOL).(!count($this->getVertices()) ? '' :
+            implode(PHP_EOL, $this->indentAll($this->getVertices())).
+            PHP_EOL).(!count($this->getEdges()) ? '' :
+            implode(PHP_EOL, $this->indentAll($this->getEdges())).
+            PHP_EOL).'}';
     }
 
     /**
      * Create vertex.
      *
-     * @param $id
+     * @param string $id
+     *
+     * @return Vertex
      */
     public function createVertex($id)
     {
-        $vertex = new Vertex($id);
-        $this->addVertex($vertex);
-
-        return $vertex;
+        return new Vertex($id, $this);
     }
 
     /**
      * Get vertices.
      *
-     * @return array
+     * @return Vertex[]
      */
     public function getVertices()
     {
-        return $this->vertices;
+        return $this->vertices ? array_values($this->vertices) : [];
     }
 
     /**
@@ -98,13 +97,23 @@ class Graph extends Node
     }
 
     /**
+     * Remove vertex.
+     *
+     * @param Vertex $vertex
+     */
+    public function removeVertex(Vertex $vertex)
+    {
+        unset($this->vertices[$vertex->getId()]);
+    }
+
+    /**
      * Get edges.
      *
-     * @return array
+     * @return Edge[]
      */
     public function getEdges()
     {
-        return $this->edges;
+        return $this->edges ? array_values($this->edges) : [];
     }
 
     /**
@@ -132,12 +141,22 @@ class Graph extends Node
     }
 
     /**
-     * Set edge.
+     * Add edge.
      *
      * @param Edge $edge
      */
-    public function setEdge(Edge $edge)
+    public function addEdge(Edge $edge)
     {
         $this->edges[(string) $edge] = $edge;
+    }
+
+    /**
+     * Remove edge.
+     *
+     * @param Edge $edge
+     */
+    public function removeEdge(Edge $edge)
+    {
+        unset($this->edges[(string) $edge]);
     }
 }

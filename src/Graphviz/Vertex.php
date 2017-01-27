@@ -30,29 +30,30 @@ class Vertex extends Node
      */
     public function __toString()
     {
-        $this->buildAttributes();
-
         return "$this->id [".PHP_EOL.
-            implode(PHP_EOL, $this->indentAll($this->attributes)).
+            implode(PHP_EOL, $this->indentAll($this->getAttributes())).
             PHP_EOL.']';
+    }
+
+    public function getAttributes()
+    {
+        $this->createAttribute('label', count($this->records) ? mb_convert_case($this->id, MB_CASE_UPPER).'|'.implode('|', $this->records) : $this->id);
+
+        return parent::getAttributes();
     }
 
     /**
      * Vertex constructor.
      *
      * @param string $id
+     * @param Graph  $graph
      */
-    public function __construct($id)
+    public function __construct($id = null, $graph = null)
     {
         $this->id = $id;
-    }
-
-    /**
-     * Build attributes.
-     */
-    protected function buildAttributes()
-    {
-        $this->setAttribute('label', count($this->records) ? mb_convert_case($this->id, MB_CASE_UPPER).'|'.implode('|', $this->records) : $this->id);
+        if ($graph) {
+            $graph->addVertex($this);
+        }
     }
 
     /**
@@ -82,7 +83,7 @@ class Vertex extends Node
      */
     public function getRecords()
     {
-        return $this->records;
+        return $this->records ? array_values($this->records) : [];
     }
 
     /**
@@ -107,6 +108,38 @@ class Vertex extends Node
         $record->setGraph($this->graph);
         $record->setVertex($this);
         $this->records[$record->getId()] = $record;
+    }
+
+    /**
+     * Remove record.
+     *
+     * @param Record $record
+     */
+    public function removeRecord(Record $record)
+    {
+        unset($this->records[$record->getId()]);
+    }
+
+    /**
+     * Create record.
+     *
+     * @param string $id
+     *
+     * @return Record
+     */
+    public function createRecord($id)
+    {
+        return new Record($id, $this);
+    }
+
+    /**
+     * Delete record.
+     *
+     * @param string $id
+     */
+    public function deleteRecord($id)
+    {
+        unset($this->records[$id]);
     }
 
     /**

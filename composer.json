@@ -14,9 +14,20 @@
             "Janalis\\Doctrineviz\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Janalis\\Doctrineviz\\Test\\": "test"
+        }
+    },
     "require": {
-        "php": ">=5.6",
-        "symfony/symfony": ">=2.8",
-        "doctrine/orm": ">=2.4"
+        "php": ">=5.6"
+    },
+    "require-dev": {
+        "symfony/symfony": "2.8.*",
+        "doctrine/orm": "^2.4.8",
+        "doctrine/doctrine-bundle": "~1.4",
+        "symfony/monolog-bundle": "~2.11.3",
+        "symfony/phpunit-bridge": "~2.7",
+        "phpunit/phpunit": "^5.6"
     }
 }

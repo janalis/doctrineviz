@@ -1,4 +1,5 @@
 <?php
+
 namespace Janalis\Doctrineviz\Graphviz;
 
 class Record
@@ -16,19 +17,31 @@ class Record
      */
     public function __toString()
     {
-        return "<$this->id> $this->id\\l";
+        return "<{$this->getId()}> {$this->getId()}\\l";
+    }
+
+    /**
+     * Get graph.
+     *
+     * @return Graph|null
+     */
+    public function getGraph()
+    {
+        return $this->graph;
     }
 
     /**
      * Record constructor.
      *
      * @param null|string $id
-     * @param null|Vertex $parent
+     * @param null|Vertex $vertex
      */
-    public function __construct($id = null, Vertex $parent = null)
+    public function __construct($id = null, Vertex $vertex = null)
     {
         $this->id = $id;
-        $this->parent = $parent;
+        if ($vertex) {
+            $vertex->addRecord($this);
+        }
     }
 
     /**

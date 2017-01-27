@@ -60,22 +60,18 @@ abstract class Node
      */
     public function getAttributes()
     {
-        return $this->attributes;
+        return $this->attributes ? array_values($this->attributes) : [];
     }
 
     /**
      * Set attributes.
      *
-     * @param Attribute[]|array $attributes
+     * @param Attribute[] $attributes
      */
     public function setAttributes($attributes)
     {
-        foreach ($attributes as $id => $attribute) {
-            if ($attribute instanceof Attribute) {
-                $this->attributes[$attribute->getId()] = $attribute;
-                continue;
-            }
-            $this->setAttribute($id, $attribute);
+        foreach ($attributes as $attribute) {
+            $this->attributes[$attribute->getId()] = $attribute;
         }
     }
 
@@ -94,13 +90,48 @@ abstract class Node
     }
 
     /**
-     * Set attribute.
+     * Create attribute.
      *
      * @param string $id
      * @param string $value
+     *
+     * @return Attribute
      */
-    public function setAttribute($id, $value)
+    public function createAttribute($id, $value)
     {
-        $this->attributes[$id] = new Attribute($id, $value);
+        $attribute = new Attribute($id, $value);
+        $this->attributes[$id] = $attribute;
+
+        return $attribute;
+    }
+
+    /**
+     * Delete attribute.
+     *
+     * @param string $id
+     */
+    public function deleteAttribute($id)
+    {
+        unset($this->attributes[$id]);
+    }
+
+    /**
+     * Add attribute.
+     *
+     * @param Attribute $attribute
+     */
+    public function addAttribute($attribute)
+    {
+        $this->attributes[$attribute->getId()] = $attribute;
+    }
+
+    /**
+     * Remove attribute.
+     *
+     * @param Attribute $attribute
+     */
+    public function removeAttribute($attribute)
+    {
+        unset($this->attributes[$attribute->getId()]);
     }
 }
