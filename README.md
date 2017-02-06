@@ -19,7 +19,7 @@ Render a graphical representation of a Doctrine2 mapped database.
 
 Require package through composer:
 ```bash
-$ composer require janalis/doctrineviz
+$ composer require --dev janalis/doctrineviz
 ```
 
 Then, enable the bundle by adding the following line in the `app/AppKernel.php` file of your project:
