@@ -74,6 +74,7 @@ class EdgeableTest extends WebTestCase
         } catch (\Exception $ignore) {
         }
     }
+
     /**
      * Test edge from.
      *

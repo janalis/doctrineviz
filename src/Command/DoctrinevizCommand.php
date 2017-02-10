@@ -43,8 +43,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
             ->addOption('pattern', 'p', InputOption::VALUE_OPTIONAL, 'Filter entities that match that PCRE pattern', '.*')
             ->addOption('binary', 'b', InputOption::VALUE_OPTIONAL, 'Path to graphviz dot binary')
             ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format', 'png')
-            ->addOption('output-path', 'o', InputOption::VALUE_OPTIONAL, 'Output path')
-        ;
+            ->addOption('output-path', 'o', InputOption::VALUE_OPTIONAL, 'Output path');
     }
 
     /**

@@ -105,7 +105,7 @@ class DoctrinevizCommandTest extends WebTestCase
         }, array_keys($command->getDefinition()->getOptionDefaults())), array_values($command->getDefinition()->getOptionDefaults()));
         $input = new ArrayInput(array_replace($options, [
             '--output-path' => __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'example.png',
-            '--format' => 'png',
+            '--format'      => 'png',
         ]), $command->getDefinition());
         $output = new BufferedOutput();
         $command->execute($input, $output);

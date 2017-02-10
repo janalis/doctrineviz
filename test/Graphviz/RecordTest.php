@@ -50,6 +50,5 @@ class RecordTest extends WebTestCase
         $this->assertEquals('bar', $record->getId());
         $this->assertEquals($vertex, $record->getVertex());
         $this->assertEquals($graph, $record->getGraph());
-
     }
 }
