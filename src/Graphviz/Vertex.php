@@ -152,7 +152,7 @@ class Vertex extends Node
     public function getRecord($id)
     {
         if (!array_key_exists($id, $this->records)) {
-            return null;
+            return;
         }
 
         return $this->records[$id];

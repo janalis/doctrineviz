@@ -50,9 +50,9 @@ class Graphviz
      *
      * @param Graph $graph to display
      *
-     * @return string filename
-     *
      * @throws \UnexpectedValueException on error
+     *
+     * @return string filename
      */
     public function createImageFile(Graph $graph)
     {

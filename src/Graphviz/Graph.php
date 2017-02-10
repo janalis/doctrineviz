@@ -79,7 +79,7 @@ class Graph extends Node
     public function getVertex($id)
     {
         if (!array_key_exists($id, $this->vertices)) {
-            return null;
+            return;
         }
 
         return $this->vertices[$id];
@@ -134,7 +134,7 @@ class Graph extends Node
     public function getEdge($id)
     {
         if (!array_key_exists($id, $this->edges)) {
-            return null;
+            return;
         }
 
         return $this->edges[$id];

@@ -83,7 +83,7 @@ abstract class Node
     public function getAttribute($id)
     {
         if (!array_key_exists($id, $this->attributes)) {
-            return null;
+            return;
         }
 
         return $this->attributes[$id];
