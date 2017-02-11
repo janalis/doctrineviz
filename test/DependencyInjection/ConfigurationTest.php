@@ -22,7 +22,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 /**
  * Configuration test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\DependencyInjection\Configuration
+ * @coversDefaultClass \Janalis\Doctrineviz\DependencyInjection\Configuration
  */
 class ConfigurationTest extends WebTestCase
 {

@@ -23,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * Vertex test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\Graphviz\Vertex
+ * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Vertex
  */
 class VertexTest extends WebTestCase
 {

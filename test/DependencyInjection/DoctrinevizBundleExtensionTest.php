@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Doctrineviz bundle extension test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\DependencyInjection\DoctrinevizBundleExtension
+ * @coversDefaultClass \Janalis\Doctrineviz\DependencyInjection\DoctrinevizBundleExtension
  */
 class DoctrinevizBundleExtensionTest extends WebTestCase
 {

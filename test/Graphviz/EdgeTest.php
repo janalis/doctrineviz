@@ -23,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * Edge test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\Graphviz\Edge
+ * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Edge
  */
 class EdgeTest extends WebTestCase
 {

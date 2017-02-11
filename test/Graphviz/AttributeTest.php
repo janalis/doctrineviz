@@ -21,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * Attribute test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\Graphviz\Attribute
+ * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Attribute
  */
 class AttributeTest extends WebTestCase
 {

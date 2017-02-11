@@ -24,7 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * Graph test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\Graphviz\Graph
+ * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Graph
  */
 class GraphTest extends WebTestCase
 {
