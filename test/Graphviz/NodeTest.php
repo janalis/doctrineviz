@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * Node test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\Graphviz\Node
+ * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Node
  */
 class NodeTest extends WebTestCase
 {

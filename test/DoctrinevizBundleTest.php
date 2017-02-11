@@ -21,7 +21,7 @@ use Janalis\Doctrineviz\DoctrinevizBundle;
 /**
  * Doctrineviz bundle test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\DoctrinevizBundle
+ * @coversDefaultClass \Janalis\Doctrineviz\DoctrinevizBundle
  */
 class DoctrinevizBundleTest extends \PHPUnit_Framework_TestCase
 {

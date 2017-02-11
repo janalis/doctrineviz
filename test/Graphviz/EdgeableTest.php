@@ -23,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * Edgeable test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\Graphviz\Edgeable
+ * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Edgeable
  */
 class EdgeableTest extends WebTestCase
 {

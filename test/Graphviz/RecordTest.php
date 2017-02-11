@@ -23,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 /**
  * Record test.
  *
- * @coversDefaultClass Janalis\Doctrineviz\Graphviz\Record
+ * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Record
  */
 class RecordTest extends WebTestCase
 {
