@@ -41,7 +41,13 @@ class User
     protected $lastName;
 
     /**
+     * @ORM\Column(name="email_id", type="integer")
+     */
+    protected $idEmail;
+
+    /**
      * @ORM\OneToOne(targetEntity="Email")
+     * @ORM\JoinColumn(name="email_id", referencedColumnName="id")
      */
     protected $email;
 

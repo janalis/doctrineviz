@@ -134,14 +134,14 @@ class DoctrinevizCommand extends ContainerAwareCommand
                     $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord(array_values($columns)[0]);
                     if (!$to) {
                         $to = new Record($this->getFieldMappingDisplayName([
-                            'fieldName' => array_values($columns)[0],
+                            'columnName' => array_values($columns)[0],
                         ]));
                         $tables[$targetEntity]->addRecord($to);
                     }
                     $from = $graph->getVertex($tables[$entity]->getId())->getRecord(array_keys($columns)[0]);
                     if (!$from) {
                         $from = new Record($this->getFieldMappingDisplayName([
-                            'fieldName' => array_keys($columns)[0],
+                            'columnName' => array_keys($columns)[0],
                         ]));
                         $tables[$entity]->addRecord($from);
                     }
@@ -193,7 +193,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
      *
      * @return string
      */
-    protected function getFieldMappingDisplayName(array $fieldMapping, $nameKey = 'fieldName')
+    protected function getFieldMappingDisplayName(array $fieldMapping, $nameKey = 'columnName')
     {
         $name = $fieldMapping[$nameKey];
         $type = array_key_exists('type', $fieldMapping) ? $fieldMapping['type'] : 'integer';
