@@ -149,6 +149,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
                 }
             }
         }
+        ksort($tables);
         $format = $input->getOption('format', 'png');
         $binary = $input->getOption('binary', null);
         $path = $input->getOption('output-path', null);
