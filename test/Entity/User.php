@@ -47,7 +47,7 @@ class User
 
     /**
      * @ORM\OneToOne(targetEntity="Email")
-     * @ORM\JoinColumn(name="email_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="email_id", nullable=false, referencedColumnName="id")
      */
     protected $email;
 

@@ -45,13 +45,16 @@ trait Edgeable
      *
      * @param Vertex|Record $element
      * @param null|string   $label
+     *
+     * @return Edge
      */
     public function addEdgeTo($element, $label = null)
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
         }
-        $this->graph->addEdge(new Edge($this, $element, $label));
+
+        return $this->graph->addEdge(new Edge($this, $element, $label));
     }
 
     /**
@@ -73,13 +76,16 @@ trait Edgeable
      *
      * @param Vertex|Record $element
      * @param null|string   $label
+     *
+     * @return Edge
      */
     public function addEdgeFrom($element, $label = null)
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
         }
-        $this->graph->addEdge(new Edge($element, $this, $label));
+
+        return $this->graph->addEdge(new Edge($element, $this, $label));
     }
 
     /**

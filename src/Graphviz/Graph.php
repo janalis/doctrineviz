@@ -152,10 +152,14 @@ class Graph extends Node
      * Add edge.
      *
      * @param Edge $edge
+     *
+     * @return Edge
      */
     public function addEdge(Edge $edge)
     {
         $this->edges[(string) $edge] = $edge;
+
+        return $edge;
     }
 
     /**
