@@ -51,6 +51,8 @@ class DoctrinevizCommand extends ContainerAwareCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return int Status code
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -75,7 +77,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
             $table->createAttribute('width', '4');
             foreach ($metadata->getFieldNames() as $fieldName) {
                 $fieldMapping = $metadata->getFieldMapping($fieldName);
-                $table->addRecord(new Record($fieldMapping['columnName']));
+                $table->addRecord(new Record($this->getFieldMappingDisplayName($fieldMapping)));
             }
             $tables[$entity] = $table;
         }
@@ -91,10 +93,10 @@ class DoctrinevizCommand extends ContainerAwareCommand
                         $sourceEntity = $associationMapping['sourceEntity'];
                         $joinColumns = $joinTable['joinColumns'];
                         foreach ($joinColumns as $joinColumn) {
-                            $record = new Record($joinColumn['name']);
+                            $record = new Record($this->getFieldMappingDisplayName($joinColumn, 'name'));
                             $table->addRecord($record);
                             if (array_key_exists($sourceEntity, $tables)) {
-                                $name = $joinColumn['referencedColumnName'];
+                                $name = $this->getFieldMappingDisplayName($joinColumn, 'referencedColumnName');
                                 $to = $graph->getVertex($tables[$sourceEntity]->getId())->getRecord($name);
                                 if (!$to) {
                                     $to = new Record($name);
@@ -108,10 +110,10 @@ class DoctrinevizCommand extends ContainerAwareCommand
                         $targetEntity = $associationMapping['targetEntity'];
                         $inverseJoinColumns = $joinTable['inverseJoinColumns'];
                         foreach ($inverseJoinColumns as $inverseJoinColumn) {
-                            $record = new Record($inverseJoinColumn['name']);
+                            $record = new Record($this->getFieldMappingDisplayName($inverseJoinColumn, 'name'));
                             $table->addRecord($record);
                             if (array_key_exists($targetEntity, $tables)) {
-                                $name = $inverseJoinColumn['referencedColumnName'];
+                                $name = $this->getFieldMappingDisplayName($inverseJoinColumn, 'referencedColumnName');
                                 $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord($name);
                                 if (!$to) {
                                     $to = new Record($name);
@@ -130,12 +132,16 @@ class DoctrinevizCommand extends ContainerAwareCommand
                     $columns = $associationMapping['sourceToTargetKeyColumns'];
                     $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord(array_values($columns)[0]);
                     if (!$to) {
-                        $to = new Record(array_values($columns)[0]);
+                        $to = new Record($this->getFieldMappingDisplayName([
+                            'fieldName' => array_values($columns)[0],
+                        ]));
                         $tables[$targetEntity]->addRecord($to);
                     }
                     $from = $graph->getVertex($tables[$entity]->getId())->getRecord(array_keys($columns)[0]);
                     if (!$from) {
-                        $from = new Record(array_keys($columns)[0]);
+                        $from = new Record($this->getFieldMappingDisplayName([
+                            'fieldName' => array_keys($columns)[0],
+                        ]));
                         $tables[$entity]->addRecord($from);
                     }
                     $from->addEdgeTo($to);
@@ -155,7 +161,23 @@ class DoctrinevizCommand extends ContainerAwareCommand
 
             return 0;
         } else {
-            return !file_put_contents($path, $graphviz->createImageData($graph));
+            return (int) !file_put_contents($path, $graphviz->createImageData($graph));
         }
+    }
+
+    /**
+     * Get field mapping display name.
+     *
+     * @param array  $fieldMapping
+     * @param string $nameKey
+     *
+     * @return string
+     */
+    protected function getFieldMappingDisplayName(array $fieldMapping, $nameKey = 'fieldName')
+    {
+        $name = $fieldMapping[$nameKey];
+        $type = array_key_exists('type', $fieldMapping) ? $fieldMapping['type'] : 'integer';
+
+        return sprintf('%s : %s', $name, $type);
     }
 }

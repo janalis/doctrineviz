@@ -54,26 +54,26 @@ class DoctrinevizCommandTest extends WebTestCase
             '  address ['.PHP_EOL.
             '    shape="record"'.PHP_EOL.
             '    width="4"'.PHP_EOL.
-            '    label="ADDRESS|<id> id\\l"'.PHP_EOL.
+            '    label="ADDRESS|<id> id : integer\\l"'.PHP_EOL.
             '  ]'.PHP_EOL.
             '  group ['.PHP_EOL.
             '    shape="record"'.PHP_EOL.
             '    width="4"'.PHP_EOL.
-            '    label="GROUP|<id> id\\l"'.PHP_EOL.
+            '    label="GROUP|<id> id : integer\\l|<name> name : string\\l"'.PHP_EOL.
             '  ]'.PHP_EOL.
             '  user ['.PHP_EOL.
             '    shape="record"'.PHP_EOL.
             '    width="4"'.PHP_EOL.
-            '    label="USER|<id> id\\l|<address_id> address_id\\l"'.PHP_EOL.
+            '    label="USER|<id> id : integer\\l|<firstName> firstName : string\\l|<lastName> lastName : string\\l|<email> email : string\\l|<address_id> address_id : integer\\l"'.PHP_EOL.
             '  ]'.PHP_EOL.
             '  user_group ['.PHP_EOL.
             '    shape="record"'.PHP_EOL.
             '    width="4"'.PHP_EOL.
-            '    label="USER_GROUP|<group_id> group_id\\l|<user_id> user_id\\l"'.PHP_EOL.
+            '    label="USER_GROUP|<group_id> group_id : integer\\l|<user_id> user_id : integer\\l"'.PHP_EOL.
             '  ]'.PHP_EOL.
-            '  user_group:group_id -> group:id;'.PHP_EOL.
-            '  user_group:user_id -> user:id;'.PHP_EOL.
-            '  user:address_id -> address:id;'.PHP_EOL.
+            '  user_group:group_id : integer -> group:id : integer;'.PHP_EOL.
+            '  user_group:user_id : integer -> user:id : integer;'.PHP_EOL.
+            '  user:address_id : integer -> address:id : integer;'.PHP_EOL.
             '}'.PHP_EOL;
         $client = static::createClient();
         $command = new DoctrinevizCommand();

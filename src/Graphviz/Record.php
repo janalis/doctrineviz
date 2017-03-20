@@ -17,7 +17,7 @@ class Record
      */
     public function __toString()
     {
-        return "<{$this->getId()}> {$this->getId()}\\l";
+        return sprintf('<%s> %s\\l', explode(' ', $this->getId())[0], $this->getId());
     }
 
     /**

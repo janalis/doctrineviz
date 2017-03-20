@@ -31,6 +31,21 @@ class User
     protected $id;
 
     /**
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $firstName;
+
+    /**
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $lastName;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $email;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Address", inversedBy="users")
      */
     protected $address;

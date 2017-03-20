@@ -31,6 +31,11 @@ class Group
     protected $id;
 
     /**
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $name;
+
+    /**
      * @ORM\ManyToMany(targetEntity="User", mappedBy="groups")
      * @ORM\JoinTable(name="user_group",
      *     joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
