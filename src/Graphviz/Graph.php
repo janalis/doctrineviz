@@ -56,6 +56,10 @@ class Graph extends Node
      */
     public function getVertices()
     {
+        if ($this->vertices) {
+            ksort($this->vertices);
+        }
+
         return $this->vertices ? array_values($this->vertices) : [];
     }
 
@@ -113,6 +117,10 @@ class Graph extends Node
      */
     public function getEdges()
     {
+        if ($this->edges) {
+            ksort($this->edges);
+        }
+
         return $this->edges ? array_values($this->edges) : [];
     }
 

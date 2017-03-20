@@ -76,16 +76,16 @@ class DoctrinevizCommandTest extends WebTestCase
             '    width="4"'.PHP_EOL.
             '    label="USER_GROUP|<group_id> group_id : integer\\l|<user_id> user_id : integer\\l"'.PHP_EOL.
             '  ]'.PHP_EOL.
-            '  user_group:group_id : integer -> group:id : integer ['.PHP_EOL.
-            '    label="* 1"'.PHP_EOL.
-            '  ];'.PHP_EOL.
-            '  user_group:user_id : integer -> user:id : integer ['.PHP_EOL.
+            '  user:address_id : integer -> address:id : integer ['.PHP_EOL.
             '    label="* 1"'.PHP_EOL.
             '  ];'.PHP_EOL.
             '  user:email_id : integer -> email:id : integer ['.PHP_EOL.
             '    label="1 1"'.PHP_EOL.
             '  ];'.PHP_EOL.
-            '  user:address_id : integer -> address:id : integer ['.PHP_EOL.
+            '  user_group:group_id : integer -> group:id : integer ['.PHP_EOL.
+            '    label="* 1"'.PHP_EOL.
+            '  ];'.PHP_EOL.
+            '  user_group:user_id : integer -> user:id : integer ['.PHP_EOL.
             '    label="* 1"'.PHP_EOL.
             '  ];'.PHP_EOL.
             '}'.PHP_EOL;

@@ -38,7 +38,7 @@ class GraphTest extends WebTestCase
         // init values
         $vertex1 = new Vertex('foo');
         $vertex2 = new Vertex('bar');
-        $vertices = [$vertex1, $vertex2];
+        $vertices = [$vertex2, $vertex1];
         $edge = new Edge($vertex1, $vertex2);
         $edges = [$edge];
         // getters and setters
@@ -72,11 +72,11 @@ class GraphTest extends WebTestCase
         $graph->addEdge($edge);
         $this->assertEquals('digraph g {'.PHP_EOL.
             '  bee="zoo"'.PHP_EOL.
-            '  foo ['.PHP_EOL.
-            '    label="foo"'.PHP_EOL.
-            '  ]'.PHP_EOL.
             '  bar ['.PHP_EOL.
             '    label="bar"'.PHP_EOL.
+            '  ]'.PHP_EOL.
+            '  foo ['.PHP_EOL.
+            '    label="foo"'.PHP_EOL.
             '  ]'.PHP_EOL.
             '  foo -> bar;'.PHP_EOL.
             '}', (string) $graph);
