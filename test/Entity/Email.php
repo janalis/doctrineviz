@@ -19,9 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="user")
+ * @ORM\Table(name="email")
  */
-class User
+class Email
 {
     /**
      * @ORM\Id
@@ -31,27 +31,7 @@ class User
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $firstName;
-
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $lastName;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Email")
-     */
-    protected $email;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Address", inversedBy="users")
-     */
+     * @ORM\Column(type="string", nullable=true)
+     **/
     protected $address;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Group", mappedBy="users")
-     */
-    protected $groups;
 }

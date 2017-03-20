@@ -16,6 +16,7 @@
 namespace Janalis\Doctrineviz\Command;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Janalis\Doctrineviz\Graphviz\Graph;
 use Janalis\Doctrineviz\Graphviz\Graphviz;
 use Janalis\Doctrineviz\Graphviz\Record;
@@ -103,7 +104,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
                                     $tables[$sourceEntity]->addRecord($to);
                                 }
                             }
-                            $record->addEdgeTo($to);
+                            $record->addEdgeTo($to, '* 1');
                         }
                     }
                     if (array_key_exists('inverseJoinColumns', $joinTable)) {
@@ -120,7 +121,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
                                     $tables[$targetEntity]->addRecord($to);
                                 }
                             }
-                            $record->addEdgeTo($to);
+                            $record->addEdgeTo($to, '* 1');
                         }
                     }
                     $tables[$table->getId()] = $table;
@@ -144,7 +145,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
                         ]));
                         $tables[$entity]->addRecord($from);
                     }
-                    $from->addEdgeTo($to);
+                    $from->addEdgeTo($to, $this->getCardinality($associationMapping));
                 }
             }
         }
@@ -162,6 +163,24 @@ class DoctrinevizCommand extends ContainerAwareCommand
             return 0;
         } else {
             return (int) !file_put_contents($path, $graphviz->createImageData($graph));
+        }
+    }
+
+    protected function getCardinality(array $fieldMapping)
+    {
+        if (!array_key_exists('type', $fieldMapping)) {
+            return null;
+        }
+
+        switch ($fieldMapping['type']) {
+            case ClassMetadataInfo::ONE_TO_ONE:
+                return '1 1';
+            case ClassMetadataInfo::ONE_TO_MANY:
+                return '1 *';
+            case ClassMetadataInfo::MANY_TO_ONE:
+                return '* 1';
+            case ClassMetadataInfo::MANY_TO_MANY:
+                return '* *';
         }
     }
 

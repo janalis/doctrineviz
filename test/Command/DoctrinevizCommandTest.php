@@ -56,6 +56,11 @@ class DoctrinevizCommandTest extends WebTestCase
             '    width="4"'.PHP_EOL.
             '    label="ADDRESS|<id> id : integer\\l"'.PHP_EOL.
             '  ]'.PHP_EOL.
+            '  email ['.PHP_EOL.
+            '    shape="record"'.PHP_EOL.
+            '    width="4"'.PHP_EOL.
+            '    label="EMAIL|<id> id : integer\\l|<address> address : string\\l"'.PHP_EOL.
+            '  ]'.PHP_EOL.
             '  group ['.PHP_EOL.
             '    shape="record"'.PHP_EOL.
             '    width="4"'.PHP_EOL.
@@ -64,16 +69,25 @@ class DoctrinevizCommandTest extends WebTestCase
             '  user ['.PHP_EOL.
             '    shape="record"'.PHP_EOL.
             '    width="4"'.PHP_EOL.
-            '    label="USER|<id> id : integer\\l|<firstName> firstName : string\\l|<lastName> lastName : string\\l|<email> email : string\\l|<address_id> address_id : integer\\l"'.PHP_EOL.
+            '    label="USER|<id> id : integer\\l|<firstName> firstName : string\\l|<lastName> lastName : string\\l|<email_id> email_id : integer\\l|<address_id> address_id : integer\\l"'.PHP_EOL.
             '  ]'.PHP_EOL.
             '  user_group ['.PHP_EOL.
             '    shape="record"'.PHP_EOL.
             '    width="4"'.PHP_EOL.
             '    label="USER_GROUP|<group_id> group_id : integer\\l|<user_id> user_id : integer\\l"'.PHP_EOL.
             '  ]'.PHP_EOL.
-            '  user_group:group_id : integer -> group:id : integer;'.PHP_EOL.
-            '  user_group:user_id : integer -> user:id : integer;'.PHP_EOL.
-            '  user:address_id : integer -> address:id : integer;'.PHP_EOL.
+            '  user_group:group_id : integer -> group:id : integer ['.PHP_EOL.
+            '    label="* 1"'.PHP_EOL.
+            '  ];'.PHP_EOL.
+            '  user_group:user_id : integer -> user:id : integer ['.PHP_EOL.
+            '    label="* 1"'.PHP_EOL.
+            '  ];'.PHP_EOL.
+            '  user:email_id : integer -> email:id : integer ['.PHP_EOL.
+            '    label="1 1"'.PHP_EOL.
+            '  ];'.PHP_EOL.
+            '  user:address_id : integer -> address:id : integer ['.PHP_EOL.
+            '    label="* 1"'.PHP_EOL.
+            '  ];'.PHP_EOL.
             '}'.PHP_EOL;
         $client = static::createClient();
         $command = new DoctrinevizCommand();

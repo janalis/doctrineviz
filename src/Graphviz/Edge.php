@@ -15,7 +15,7 @@
 
 namespace Janalis\Doctrineviz\Graphviz;
 
-class Edge
+class Edge extends Node
 {
     /** @var Vertex|Record */
     protected $from;
@@ -23,12 +23,31 @@ class Edge
     /** @var Vertex|Record */
     protected $to;
 
+    /** @var string */
+    protected $label;
+
     /*
      * @return string
      */
     public function __toString()
     {
-        return "{$this->getId($this->from)} -> {$this->getId($this->to)};";
+        return "{$this->getId($this->from)} -> {$this->getId($this->to)}".(!count($this->getAttributes()) ? '' : ' ['.PHP_EOL.
+            implode(PHP_EOL, $this->indentAll($this->getAttributes())).
+            PHP_EOL.']').';';
+    }
+
+    /**
+     * Get attributes.
+     *
+     * @return Attribute[]
+     */
+    public function getAttributes()
+    {
+        if (null !== $this->label) {
+            $this->createAttribute('label', $this->label);
+        }
+
+        return parent::getAttributes();
     }
 
     /**
@@ -48,11 +67,13 @@ class Edge
      *
      * @param Vertex|Record $from
      * @param Vertex|Record $to
+     * @param null|string   $label
      */
-    public function __construct($from, $to)
+    public function __construct($from, $to, $label = null)
     {
         $this->from = $from;
         $this->to = $to;
+        $this->label = $label;
     }
 
     /**
@@ -93,5 +114,25 @@ class Edge
     public function setTo($to)
     {
         $this->to = $to;
+    }
+
+    /**
+     * Get label.
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * Set label.
+     *
+     * @param string $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
     }
 }

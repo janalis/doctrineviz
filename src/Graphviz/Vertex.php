@@ -35,6 +35,11 @@ class Vertex extends Node
             PHP_EOL.']';
     }
 
+    /**
+     * Get attributes.
+     *
+     * @return Attribute[]
+     */
     public function getAttributes()
     {
         $this->createAttribute('label', count($this->records) ? mb_convert_case($this->id, MB_CASE_UPPER).'|'.implode('|', $this->records) : $this->id);

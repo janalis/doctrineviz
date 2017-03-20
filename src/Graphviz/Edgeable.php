@@ -44,51 +44,55 @@ trait Edgeable
      * Add edge to.
      *
      * @param Vertex|Record $element
+     * @param null|string   $label
      */
-    public function addEdgeTo($element)
+    public function addEdgeTo($element, $label = null)
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
         }
-        $this->graph->addEdge(new Edge($this, $element));
+        $this->graph->addEdge(new Edge($this, $element, $label));
     }
 
     /**
      * Remove edge to.
      *
      * @param Vertex|Record $element
+     * @param null|string   $label
      */
-    public function removeEdgeTo($element)
+    public function removeEdgeTo($element, $label = null)
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
         }
-        $this->graph->removeEdge(new Edge($this, $element));
+        $this->graph->removeEdge(new Edge($this, $element, $label));
     }
 
     /**
      * Add edge from.
      *
      * @param Vertex|Record $element
+     * @param null|string   $label
      */
-    public function addEdgeFrom($element)
+    public function addEdgeFrom($element, $label = null)
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
         }
-        $this->graph->addEdge(new Edge($element, $this));
+        $this->graph->addEdge(new Edge($element, $this, $label));
     }
 
     /**
      * Remove edge from.
      *
      * @param Vertex|Record $element
+     * @param null|string   $label
      */
-    public function removeEdgeFrom($element)
+    public function removeEdgeFrom($element, $label = null)
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
         }
-        $this->graph->removeEdge(new Edge($element, $this));
+        $this->graph->removeEdge(new Edge($element, $this, $label));
     }
 }
