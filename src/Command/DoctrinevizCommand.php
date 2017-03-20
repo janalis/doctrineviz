@@ -96,15 +96,19 @@ class DoctrinevizCommand extends ContainerAwareCommand
                         foreach ($joinColumns as $joinColumn) {
                             $record = new Record($this->getFieldMappingDisplayName($joinColumn, 'name'));
                             $table->addRecord($record);
+                            $nullable = false;
                             if (array_key_exists($sourceEntity, $tables)) {
                                 $name = $this->getFieldMappingDisplayName($joinColumn, 'referencedColumnName');
+                                $nullable = $joinColumn['nullable'];
                                 $to = $graph->getVertex($tables[$sourceEntity]->getId())->getRecord($name);
                                 if (!$to) {
                                     $to = new Record($name);
                                     $tables[$sourceEntity]->addRecord($to);
                                 }
                             }
-                            $record->addEdgeTo($to, '* 1');
+                            $edge = $record->addEdgeTo($to);
+                            $edge->createAttribute('headlabel', $nullable ? '0..1' : '1');
+                            $edge->createAttribute('taillabel', '*');
                         }
                     }
                     if (array_key_exists('inverseJoinColumns', $joinTable)) {
@@ -113,15 +117,19 @@ class DoctrinevizCommand extends ContainerAwareCommand
                         foreach ($inverseJoinColumns as $inverseJoinColumn) {
                             $record = new Record($this->getFieldMappingDisplayName($inverseJoinColumn, 'name'));
                             $table->addRecord($record);
+                            $nullable = false;
                             if (array_key_exists($targetEntity, $tables)) {
                                 $name = $this->getFieldMappingDisplayName($inverseJoinColumn, 'referencedColumnName');
+                                $nullable = $inverseJoinColumn['nullable'];
                                 $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord($name);
                                 if (!$to) {
                                     $to = new Record($name);
                                     $tables[$targetEntity]->addRecord($to);
                                 }
                             }
-                            $record->addEdgeTo($to, '* 1');
+                            $edge = $record->addEdgeTo($to);
+                            $edge->createAttribute('headlabel', $nullable ? '0..1' : '1');
+                            $edge->createAttribute('taillabel', '*');
                         }
                     }
                     $tables[$table->getId()] = $table;
@@ -145,7 +153,13 @@ class DoctrinevizCommand extends ContainerAwareCommand
                         ]));
                         $tables[$entity]->addRecord($from);
                     }
-                    $from->addEdgeTo($to, $this->getCardinality($associationMapping));
+                    $joinColumn = $associationMapping['joinColumns'][0];
+                    $nullable = !array_key_exists('nullable', $joinColumn) || $joinColumn['nullable'];
+                    $edge = $from->addEdgeTo($to);
+                    $edge->createAttribute('headlabel', $nullable ? '0..1' : '1');
+                    if (array_key_exists('type', $associationMapping)) {
+                        $edge->createAttribute('taillabel', ClassMetadataInfo::ONE_TO_ONE === $associationMapping['type'] ? '1' : '*');
+                    }
                 }
             }
         }
@@ -164,24 +178,6 @@ class DoctrinevizCommand extends ContainerAwareCommand
             return 0;
         } else {
             return (int) !file_put_contents($path, $graphviz->createImageData($graph));
-        }
-    }
-
-    protected function getCardinality(array $fieldMapping)
-    {
-        if (!array_key_exists('type', $fieldMapping)) {
-            return null;
-        }
-
-        switch ($fieldMapping['type']) {
-            case ClassMetadataInfo::ONE_TO_ONE:
-                return '1 1';
-            case ClassMetadataInfo::ONE_TO_MANY:
-                return '1 *';
-            case ClassMetadataInfo::MANY_TO_ONE:
-                return '* 1';
-            case ClassMetadataInfo::MANY_TO_MANY:
-                return '* *';
         }
     }
 
