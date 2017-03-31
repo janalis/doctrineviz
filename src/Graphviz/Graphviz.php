@@ -164,7 +164,7 @@ class Graphviz
     {
         $process = new Process(sprintf(
             $format,
-            ...array_map(function($arg, $index) use ($format) {
+            ...array_map(function ($arg, $index) use ($format) {
                 return 0 === $index && 0 === strpos('%s', $format) ? escapeshellcmd($arg) : escapeshellarg($arg);
             }, $args, array_keys($args))
         ));
