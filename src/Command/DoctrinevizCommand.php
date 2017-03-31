@@ -161,7 +161,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
         $graphviz = new Graphviz($format, $binary);
         if (!$path) {
             if ('dot' === $format) {
-                $output->writeln((string)$graph);
+                $output->writeln((string) $graph);
             } else {
                 $graphviz->display($graph);
             }
