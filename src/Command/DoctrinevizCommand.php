@@ -70,17 +70,16 @@ class DoctrinevizCommand extends ContainerAwareCommand
         $tables = [];
         foreach ($entities as $entity) {
             $metadata = $em->getClassMetadata($entity);
-            if (!$metadata->getFieldNames()) {
-                continue;
+            if ($metadata->getFieldNames()) {
+                $table = $graph->createVertex($metadata->getTableName());
+                $table->createAttribute('shape', 'record');
+                $table->createAttribute('width', '4');
+                foreach ($metadata->getFieldNames() as $fieldName) {
+                    $fieldMapping = $metadata->getFieldMapping($fieldName);
+                    $table->addRecord(new Record($this->getFieldMappingDisplayName($fieldMapping)));
+                }
+                $tables[$entity] = $table;
             }
-            $table = $graph->createVertex($metadata->getTableName());
-            $table->createAttribute('shape', 'record');
-            $table->createAttribute('width', '4');
-            foreach ($metadata->getFieldNames() as $fieldName) {
-                $fieldMapping = $metadata->getFieldMapping($fieldName);
-                $table->addRecord(new Record($this->getFieldMappingDisplayName($fieldMapping)));
-            }
-            $tables[$entity] = $table;
         }
         foreach ($entities as $entity) {
             $metadata = $em->getClassMetadata($entity);
@@ -100,11 +99,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
                             if (array_key_exists($sourceEntity, $tables)) {
                                 $name = $this->getFieldMappingDisplayName($joinColumn, 'referencedColumnName');
                                 $nullable = $joinColumn['nullable'];
-                                $to = $graph->getVertex($tables[$sourceEntity]->getId())->getRecord($name);
-                                if (!$to) {
-                                    $to = new Record($name);
-                                    $tables[$sourceEntity]->addRecord($to);
-                                }
+                                $tables[$sourceEntity]->addRecord($to = $graph->getVertex($tables[$sourceEntity]->getId())->getRecord($name) ?: new Record($name));
                             }
                             $edge = $record->addEdgeTo($to);
                             $edge->createAttribute('headlabel', $nullable ? '0..1' : '1');
@@ -121,11 +116,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
                             if (array_key_exists($targetEntity, $tables)) {
                                 $name = $this->getFieldMappingDisplayName($inverseJoinColumn, 'referencedColumnName');
                                 $nullable = $inverseJoinColumn['nullable'];
-                                $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord($name);
-                                if (!$to) {
-                                    $to = new Record($name);
-                                    $tables[$targetEntity]->addRecord($to);
-                                }
+                                $tables[$targetEntity]->addRecord($to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord($name) ?: new Record($name));
                             }
                             $edge = $record->addEdgeTo($to);
                             $edge->createAttribute('headlabel', $nullable ? '0..1' : '1');
@@ -168,17 +159,17 @@ class DoctrinevizCommand extends ContainerAwareCommand
         $binary = $input->getOption('binary', null);
         $path = $input->getOption('output-path', null);
         $graphviz = new Graphviz($format, $binary);
-        if (!$path && 'dot' === $format) {
-            $output->writeln((string) $graph);
+        if (!$path) {
+            if ('dot' === $format) {
+                $output->writeln((string)$graph);
+            } else {
+                $graphviz->display($graph);
+            }
 
             return 0;
-        } elseif (!$path) {
-            $graphviz->display($graph);
-
-            return 0;
-        } else {
-            return (int) !file_put_contents($path, $graphviz->createImageData($graph));
         }
+
+        return (int) !file_put_contents($path, $graphviz->createImageData($graph));
     }
 
     /**

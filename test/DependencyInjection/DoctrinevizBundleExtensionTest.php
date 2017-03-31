@@ -16,7 +16,7 @@
 namespace Janalis\Doctrineviz\Test\DependencyInjection;
 
 use Janalis\Doctrineviz\DependencyInjection\DoctrinevizBundleExtension;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  *
  * @coversDefaultClass \Janalis\Doctrineviz\DependencyInjection\DoctrinevizBundleExtension
  */
-class DoctrinevizBundleExtensionTest extends WebTestCase
+class DoctrinevizBundleExtensionTest extends DoctrinevizTestCase
 {
     /**
      * Test prepend.

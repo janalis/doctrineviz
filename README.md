@@ -11,11 +11,6 @@ Render a graphical representation of a Doctrine2 mapped database.
 
 ![Example](example.png)
 
-## To do
-
-- [ ] Add phpunit tests
-- [ ] Add mongoDB support
-
 ## Installation
 
 Require package through composer:

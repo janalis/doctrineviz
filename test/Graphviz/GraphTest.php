@@ -19,14 +19,14 @@ use Janalis\Doctrineviz\Graphviz\Attribute;
 use Janalis\Doctrineviz\Graphviz\Edge;
 use Janalis\Doctrineviz\Graphviz\Graph;
 use Janalis\Doctrineviz\Graphviz\Vertex;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 
 /**
  * Graph test.
  *
  * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Graph
  */
-class GraphTest extends WebTestCase
+class GraphTest extends DoctrinevizTestCase
 {
     /**
      * Test accessors.
