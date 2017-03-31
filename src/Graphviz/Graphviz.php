@@ -50,23 +50,30 @@ class Graphviz
      *
      * @param Graph $graph to display
      *
-     * @throws \UnexpectedValueException on error
+     * @throws \RuntimeException on error
      *
      * @return string filename
      */
     public function createImageFile(Graph $graph)
     {
+        // @codeCoverageIgnoreStart
         if (false === $tmp = tempnam(sys_get_temp_dir(), 'doctrineviz')) {
-            throw new \UnexpectedValueException('Unable to get temporary file name for graphviz script');
+            throw new \RuntimeException('Unable to get temporary file name for graphviz script');
         }
         if (false === file_put_contents($tmp, (string) $graph, LOCK_EX)) {
-            throw new \UnexpectedValueException('Unable to write graphviz script to temporary file');
+            throw new \RuntimeException('Unable to write graphviz script to temporary file');
         }
-        $process = new Process(escapeshellarg($this->binary).' -T '.escapeshellarg($this->format).' '.escapeshellarg($tmp).' -o '.escapeshellarg($tmp.'.'.$this->format));
-        $process->mustRun();
-        unlink($tmp);
+        // @codeCoverageIgnoreEnd
+        $path = "$tmp.{$this->format}";
+        $this->execute(
+            '%s -T %s %s -o %s',
+            $this->binary,
+            $this->format,
+            $tmp,
+            $path
+        );
 
-        return $tmp.'.'.$this->format;
+        return $path;
     }
 
     /**
@@ -76,19 +83,24 @@ class Graphviz
      */
     public function display(Graph $graph)
     {
-        $path = $this->createImageFile($graph);
-        if (0 === strpos(strtoupper(PHP_OS), 'WIN')) {
-            // open image in untitled, temporary background shell
-            $command = 'start';
-        } elseif ('DARWIN' === strtoupper(PHP_OS)) {
-            // open image in background (redirect stdout to /dev/null, sterr to stdout and run in background)
-            $command = 'open';
-        } else {
-            // open image in background (redirect stdout to /dev/null, sterr to stdout and run in background)
-            $command = 'xdg-open';
+        // @codeCoverageIgnoreStart
+        switch (true) {
+            case 0 === strpos(strtoupper(PHP_OS), 'WIN'):
+                $binary = 'start';
+                break;
+            case 'DARWIN' === strtoupper(PHP_OS):
+                $binary = 'open';
+                break;
+            default:
+                $binary = 'xdg-open';
         }
-        $process = new Process($command.' '.escapeshellarg($path));
-        $process->mustRun();
+        // @codeCoverageIgnoreEnd
+        $path = $this->createImageFile($graph);
+        $this->execute(
+            '%s %s',
+            $binary,
+            $path
+        );
     }
 
     /**
@@ -103,9 +115,9 @@ class Graphviz
         if ('dot' === $this->format) {
             return (string) $graph;
         }
-        $file = $this->createImageFile($graph);
-        $data = file_get_contents($file);
-        unlink($file);
+        $path = $this->createImageFile($graph);
+        $data = file_get_contents($path);
+        unlink($path);
 
         return $data;
     }
@@ -138,6 +150,27 @@ class Graphviz
         }
 
         return '<img src="'.$this->createImageSrc($graph).'" />';
+    }
+
+    /**
+     * Executes a command.
+     *
+     * @param string $format  of the command
+     * @param array  ...$args to escape for shell
+     *
+     * @return Process
+     */
+    protected function execute($format, ...$args)
+    {
+        $process = new Process(sprintf(
+            $format,
+            ...array_map(function($arg, $index) use ($format) {
+                return 0 === $index && 0 === strpos('%s', $format) ? escapeshellcmd($arg) : escapeshellarg($arg);
+            }, $args, array_keys($args))
+        ));
+        $process->mustRun();
+
+        return $process;
     }
 
     /**

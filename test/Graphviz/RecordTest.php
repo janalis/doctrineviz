@@ -18,14 +18,14 @@ namespace Janalis\Doctrineviz\Test\Graphviz;
 use Janalis\Doctrineviz\Graphviz\Graph;
 use Janalis\Doctrineviz\Graphviz\Record;
 use Janalis\Doctrineviz\Graphviz\Vertex;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 
 /**
  * Record test.
  *
  * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Record
  */
-class RecordTest extends WebTestCase
+class RecordTest extends DoctrinevizTestCase
 {
     /**
      * Test accessors.

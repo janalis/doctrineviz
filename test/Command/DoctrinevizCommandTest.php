@@ -16,7 +16,7 @@
 namespace Janalis\Doctrineviz\Test\Command;
 
 use Janalis\Doctrineviz\Command\DoctrinevizCommand;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  *
  * @coversDefaultClass \Janalis\Doctrineviz\Command\DoctrinevizCommand
  */
-class DoctrinevizCommandTest extends WebTestCase
+class DoctrinevizCommandTest extends DoctrinevizTestCase
 {
     /**
      * Test configure.
@@ -127,5 +127,45 @@ class DoctrinevizCommandTest extends WebTestCase
         ]), $command->getDefinition());
         $output = new BufferedOutput();
         $command->execute($input, $output);
+    }
+
+    /**
+     * Test get field mapping display name.
+     *
+     * @covers ::getFieldMappingDisplayName
+     * @group command
+     */
+    public function testGetFieldMappingDisplayName()
+    {
+        $name = 'foo';
+        $command = new DoctrinevizCommand();
+        // default key is columnName and default doctrine type is integer
+        $this->assertEquals("$name : integer", $this->callProtectedMethod(
+            $command,
+            'getFieldMappingDisplayName',
+            [
+                'columnName' => $name,
+            ]
+        ));
+        // key can be passed as a parameter
+        $key = 'bar';
+        $this->assertEquals("$name : integer", $this->callProtectedMethod(
+            $command,
+            'getFieldMappingDisplayName',
+            [
+                $key => $name,
+            ],
+            $key
+        ));
+        // declared doctrine type is returned
+        $type = 'baz';
+        $this->assertEquals("$name : $type", $this->callProtectedMethod(
+            $command,
+            'getFieldMappingDisplayName',
+            [
+                'columnName' => $name,
+                'type' => $type,
+            ]
+        ));
     }
 }

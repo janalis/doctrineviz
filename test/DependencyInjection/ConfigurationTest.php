@@ -16,7 +16,7 @@
 namespace Janalis\Doctrineviz\Test\DependencyInjection;
 
 use Janalis\Doctrineviz\DependencyInjection\Configuration;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
 /**
@@ -24,8 +24,19 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
  *
  * @coversDefaultClass \Janalis\Doctrineviz\DependencyInjection\Configuration
  */
-class ConfigurationTest extends WebTestCase
+class ConfigurationTest extends DoctrinevizTestCase
 {
+    /**
+     * Test constructor.
+     *
+     * @covers ::__construct
+     * @group dependecy_injection
+     */
+    public function testConstructor()
+    {
+        new Configuration('foo');
+    }
+
     /**
      * Test get root.
      *

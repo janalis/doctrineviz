@@ -18,14 +18,14 @@ namespace Janalis\Doctrineviz\Test\Graphviz;
 use Janalis\Doctrineviz\Graphviz\Edge;
 use Janalis\Doctrineviz\Graphviz\Record;
 use Janalis\Doctrineviz\Graphviz\Vertex;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 
 /**
  * Edge test.
  *
  * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Edge
  */
-class EdgeTest extends WebTestCase
+class EdgeTest extends DoctrinevizTestCase
 {
     /**
      * Test accessors.
@@ -53,13 +53,18 @@ class EdgeTest extends WebTestCase
         $to->expects($this->once())->method('getVertex')->will($this->returnValue($from));
         // constructor
         $edge = new Edge($from, $to);
-        $this->assertEquals('foo -> foo:bar;', (string) $edge);
+        $edge->setLabel('baz');
+        $this->assertEquals('foo -> foo:bar ['.PHP_EOL.
+            '  label="baz"'.PHP_EOL.
+            '];', (string) $edge);
         $this->assertEquals($from, $edge->getFrom());
         $this->assertEquals($to, $edge->getTo());
         // getters and setters
         $edge->setFrom(null);
         $edge->setTo(null);
+        $edge->setLabel(null);
         $this->assertNull($edge->getFrom());
         $this->assertNull($edge->getTo());
+        $this->assertNull($edge->getLabel());
     }
 }

@@ -23,7 +23,7 @@ use Janalis\Doctrineviz\DoctrinevizBundle;
  *
  * @coversDefaultClass \Janalis\Doctrineviz\DoctrinevizBundle
  */
-class DoctrinevizBundleTest extends \PHPUnit_Framework_TestCase
+class DoctrinevizBundleTest extends DoctrinevizTestCase
 {
     /**
      * Test get container extension.

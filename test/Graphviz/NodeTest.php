@@ -17,14 +17,14 @@ namespace Janalis\Doctrineviz\Test\Graphviz;
 
 use Janalis\Doctrineviz\Graphviz\Attribute;
 use Janalis\Doctrineviz\Graphviz\Vertex;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 
 /**
  * Node test.
  *
  * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Node
  */
-class NodeTest extends WebTestCase
+class NodeTest extends DoctrinevizTestCase
 {
     /**
      * Test accessors.

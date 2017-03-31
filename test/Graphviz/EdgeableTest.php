@@ -18,14 +18,14 @@ namespace Janalis\Doctrineviz\Test\Graphviz;
 use Janalis\Doctrineviz\Graphviz\Edge;
 use Janalis\Doctrineviz\Graphviz\Graph;
 use Janalis\Doctrineviz\Graphviz\Vertex;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 
 /**
  * Edgeable test.
  *
  * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Edgeable
  */
-class EdgeableTest extends WebTestCase
+class EdgeableTest extends DoctrinevizTestCase
 {
     /**
      * Test accessors.
