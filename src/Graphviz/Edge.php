@@ -13,14 +13,18 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Graphviz;
 
-class Edge extends Node
+class Edge implements EdgeInterface
 {
-    /** @var Vertex|Record */
+    use Attributable;
+
+    /** @var ElementInterface */
     protected $from;
 
-    /** @var Vertex|Record */
+    /** @var ElementInterface */
     protected $to;
 
     /** @var string */
@@ -39,37 +43,37 @@ class Edge extends Node
     /**
      * Get attributes.
      *
-     * @return Attribute[]
+     * @return AttributeInterface[]
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         if (null !== $this->label) {
             $this->createAttribute('label', $this->label);
         }
 
-        return parent::getAttributes();
+        return $this->attributes ? array_values($this->attributes) : [];
     }
 
     /**
      * Get vertex id.
      *
-     * @param Vertex|Record $element
+     * @param ElementInterface $element
      *
      * @return string
      */
-    protected function getId($element)
+    protected function getId(ElementInterface $element): string
     {
-        return $element instanceof Record ? "{$element->getVertex()->getId()}:{$element->getId()}" : "{$element->getId()}";
+        return $element instanceof RecordInterface ? "{$element->getVertex()->getId()}:{$element->getId()}" : "{$element->getId()}";
     }
 
     /**
      * Edge constructor.
      *
-     * @param Vertex|Record $from
-     * @param Vertex|Record $to
-     * @param null|string   $label
+     * @param ElementInterface|null $from
+     * @param ElementInterface|null $to
+     * @param null|string           $label
      */
-    public function __construct($from, $to, $label = null)
+    public function __construct(ElementInterface $from = null, ElementInterface $to = null, string $label = null)
     {
         $this->from = $from;
         $this->to = $to;
@@ -79,9 +83,9 @@ class Edge extends Node
     /**
      * Get from.
      *
-     * @return Vertex|Record
+     * @return ElementInterface|null
      */
-    public function getFrom()
+    public function getFrom(): ?ElementInterface
     {
         return $this->from;
     }
@@ -89,9 +93,9 @@ class Edge extends Node
     /**
      * Set from.
      *
-     * @param Vertex|Record $from
+     * @param ElementInterface $from
      */
-    public function setFrom($from)
+    public function setFrom(ElementInterface $from): void
     {
         $this->from = $from;
     }
@@ -99,9 +103,9 @@ class Edge extends Node
     /**
      * Get to.
      *
-     * @return Vertex|Record
+     * @return ElementInterface|null
      */
-    public function getTo()
+    public function getTo(): ?ElementInterface
     {
         return $this->to;
     }
@@ -109,9 +113,9 @@ class Edge extends Node
     /**
      * Set to.
      *
-     * @param Vertex|Record $to
+     * @param ElementInterface $to
      */
-    public function setTo($to)
+    public function setTo($to): void
     {
         $this->to = $to;
     }
@@ -119,9 +123,9 @@ class Edge extends Node
     /**
      * Get label.
      *
-     * @return string
+     * @return string|null
      */
-    public function getLabel()
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -129,9 +133,9 @@ class Edge extends Node
     /**
      * Set label.
      *
-     * @param string $label
+     * @param string|null $label
      */
-    public function setLabel($label)
+    public function setLabel(string $label = null): void
     {
         $this->label = $label;
     }

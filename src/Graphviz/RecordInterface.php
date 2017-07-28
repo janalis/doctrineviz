@@ -15,25 +15,21 @@
 
 declare(strict_types=1);
 
-namespace Janalis\Doctrineviz\Test\Entity;
+namespace Janalis\Doctrineviz\Graphviz;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity()
- * @ORM\Table(name="email")
- */
-class Email
+interface RecordInterface extends ElementInterface
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * Get vertex.
+     *
+     * @return VertexInterface|null
      */
-    protected $id;
+    public function getVertex(): ?VertexInterface;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     **/
-    protected $address;
+     * Set vertex.
+     *
+     * @param VertexInterface $vertex
+     */
+    public function setVertex(VertexInterface $vertex): void;
 }

@@ -13,9 +13,11 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Graphviz;
 
-class Attribute
+class Attribute implements AttributeInterface
 {
     /** @var string */
     protected $id;
@@ -37,7 +39,7 @@ class Attribute
      * @param string $id
      * @param string $value
      */
-    public function __construct($id, $value)
+    public function __construct(string $id, string $value)
     {
         $this->id = $id;
         $this->value = $value;
@@ -48,7 +50,7 @@ class Attribute
      *
      * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -58,7 +60,7 @@ class Attribute
      *
      * @param string $id
      */
-    public function setId($id)
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
@@ -68,7 +70,7 @@ class Attribute
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -78,7 +80,7 @@ class Attribute
      *
      * @param string $value
      */
-    public function setValue($value)
+    public function setValue(string $value): void
     {
         $this->value = $value;
     }

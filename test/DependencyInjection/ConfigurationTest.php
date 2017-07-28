@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Test\DependencyInjection;
 
 use Janalis\Doctrineviz\DependencyInjection\Configuration;
@@ -34,7 +36,9 @@ class ConfigurationTest extends DoctrinevizTestCase
      */
     public function testConstructor()
     {
-        new Configuration('foo');
+        $root = 'foo';
+        $config = new Configuration($root);
+        $this->assertEquals($root, $config->getRoot());
     }
 
     /**
