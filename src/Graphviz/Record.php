@@ -45,7 +45,7 @@ class Record extends Element implements RecordInterface
     /**
      * Record constructor.
      *
-     * @param null|string $id
+     * @param null|string          $id
      * @param null|VertexInterface $vertex
      */
     public function __construct(string $id = null, VertexInterface $vertex = null)

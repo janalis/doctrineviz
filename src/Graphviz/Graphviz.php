@@ -165,8 +165,8 @@ class Graphviz
     protected function execute(string $format, ...$args): Process
     {
         $process = new Process(sprintf($format, ...array_map(function ($arg, $index) use ($format) {
-                return 0 === $index && 0 === strpos('%s', $format) ? escapeshellcmd($arg) : escapeshellarg($arg);
-            }, $args, array_keys($args))));
+            return 0 === $index && 0 === strpos('%s', $format) ? escapeshellcmd($arg) : escapeshellarg($arg);
+        }, $args, array_keys($args))));
         $process->mustRun();
 
         return $process;

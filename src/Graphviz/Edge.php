@@ -71,7 +71,7 @@ class Edge implements EdgeInterface
      *
      * @param ElementInterface|null $from
      * @param ElementInterface|null $to
-     * @param null|string      $label
+     * @param null|string           $label
      */
     public function __construct(ElementInterface $from = null, ElementInterface $to = null, string $label = null)
     {

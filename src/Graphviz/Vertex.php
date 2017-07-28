@@ -50,8 +50,8 @@ class Vertex extends Element implements VertexInterface
     /**
      * Vertex constructor.
      *
-     * @param string $id
-     * @param GraphInterface  $graph
+     * @param string         $id
+     * @param GraphInterface $graph
      */
     public function __construct(string $id = null, GraphInterface $graph = null)
     {

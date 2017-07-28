@@ -62,6 +62,7 @@ class EdgeTest extends DoctrinevizTestCase
         $this->assertEquals($from, $edge->getFrom());
         $this->assertEquals($to, $edge->getTo());
     }
+
     /**
      * Test accessors.
      *
