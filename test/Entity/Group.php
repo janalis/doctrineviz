@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Test\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

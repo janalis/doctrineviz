@@ -13,14 +13,18 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Graphviz;
 
-class Graph extends Node
+class Graph implements GraphInterface
 {
-    /** @var Vertex[] */
+    use Attributable;
+
+    /** @var VertexInterface[] */
     protected $vertices;
 
-    /** @var Edge[] */
+    /** @var EdgeInterface[] */
     protected $edges;
 
     /**
@@ -28,12 +32,9 @@ class Graph extends Node
      */
     public function __toString()
     {
-        return 'digraph g {'.PHP_EOL.(!count($this->getAttributes()) ? '' :
-            implode(PHP_EOL, $this->indentAll($this->getAttributes())).
-            PHP_EOL).(!count($this->getVertices()) ? '' :
-            implode(PHP_EOL, $this->indentAll($this->getVertices())).
-            PHP_EOL).(!count($this->getEdges()) ? '' :
-            implode(PHP_EOL, $this->indentAll($this->getEdges())).
+        return 'digraph g {'.PHP_EOL.(!count($this->getAttributes()) ? '' : implode(PHP_EOL, $this->indentAll($this->getAttributes())).
+            PHP_EOL).(!count($this->getVertices()) ? '' : implode(PHP_EOL, $this->indentAll($this->getVertices())).
+            PHP_EOL).(!count($this->getEdges()) ? '' : implode(PHP_EOL, $this->indentAll($this->getEdges())).
             PHP_EOL).'}';
     }
 
@@ -42,9 +43,9 @@ class Graph extends Node
      *
      * @param string $id
      *
-     * @return Vertex
+     * @return VertexInterface
      */
-    public function createVertex($id)
+    public function createVertex(string $id): VertexInterface
     {
         return new Vertex($id, $this);
     }
@@ -52,9 +53,9 @@ class Graph extends Node
     /**
      * Get vertices.
      *
-     * @return Vertex[]
+     * @return VertexInterface[]
      */
-    public function getVertices()
+    public function getVertices(): array
     {
         if ($this->vertices) {
             ksort($this->vertices);
@@ -66,9 +67,9 @@ class Graph extends Node
     /**
      * Set vertices.
      *
-     * @param array $vertices
+     * @param VertexInterface[] $vertices
      */
-    public function setVertices($vertices)
+    public function setVertices(array $vertices): void
     {
         foreach ($vertices as $vertex) {
             $this->addVertex($vertex);
@@ -78,12 +79,14 @@ class Graph extends Node
     /**
      * Get vertex.
      *
-     * @return string|null
+     * @param string $id
+     *
+     * @return VertexInterface
      */
-    public function getVertex($id)
+    public function getVertex(string $id): ?VertexInterface
     {
         if (!array_key_exists($id, $this->vertices)) {
-            return;
+            return null;
         }
 
         return $this->vertices[$id];
@@ -92,9 +95,9 @@ class Graph extends Node
     /**
      * Add vertex.
      *
-     * @param Vertex $vertex
+     * @param VertexInterface $vertex
      */
-    public function addVertex(Vertex $vertex)
+    public function addVertex(VertexInterface $vertex): void
     {
         $vertex->setGraph($this);
         $this->vertices[$vertex->getId()] = $vertex;
@@ -103,9 +106,9 @@ class Graph extends Node
     /**
      * Remove vertex.
      *
-     * @param Vertex $vertex
+     * @param VertexInterface $vertex
      */
-    public function removeVertex(Vertex $vertex)
+    public function removeVertex(VertexInterface $vertex): void
     {
         unset($this->vertices[$vertex->getId()]);
     }
@@ -113,9 +116,9 @@ class Graph extends Node
     /**
      * Get edges.
      *
-     * @return Edge[]
+     * @return EdgeInterface[]
      */
-    public function getEdges()
+    public function getEdges(): array
     {
         if ($this->edges) {
             ksort($this->edges);
@@ -127,9 +130,9 @@ class Graph extends Node
     /**
      * Set edges.
      *
-     * @param array $edges
+     * @param EdgeInterface[] $edges
      */
-    public function setEdges($edges)
+    public function setEdges(array $edges): void
     {
         $this->edges = $edges;
     }
@@ -137,12 +140,14 @@ class Graph extends Node
     /**
      * Get edge.
      *
-     * @return string|null
+     * @param string $id
+     *
+     * @return EdgeInterface|null
      */
-    public function getEdge($id)
+    public function getEdge(string $id): ?EdgeInterface
     {
         if (!array_key_exists($id, $this->edges)) {
-            return;
+            return null;
         }
 
         return $this->edges[$id];
@@ -151,11 +156,11 @@ class Graph extends Node
     /**
      * Add edge.
      *
-     * @param Edge $edge
+     * @param EdgeInterface $edge
      *
-     * @return Edge
+     * @return EdgeInterface
      */
-    public function addEdge(Edge $edge)
+    public function addEdge(EdgeInterface $edge): EdgeInterface
     {
         $this->edges[(string) $edge] = $edge;
 
@@ -165,9 +170,9 @@ class Graph extends Node
     /**
      * Remove edge.
      *
-     * @param Edge $edge
+     * @param EdgeInterface $edge
      */
-    public function removeEdge(Edge $edge)
+    public function removeEdge(EdgeInterface $edge): void
     {
         unset($this->edges[(string) $edge]);
     }

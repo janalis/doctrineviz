@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Test\Graphviz;
 
 use Janalis\Doctrineviz\Graphviz\Attribute;
@@ -21,10 +23,8 @@ use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 
 /**
  * Node test.
- *
- * @coversDefaultClass \Janalis\Doctrineviz\Graphviz\Node
  */
-class NodeTest extends DoctrinevizTestCase
+class AttributableTest extends DoctrinevizTestCase
 {
     /**
      * Test accessors.

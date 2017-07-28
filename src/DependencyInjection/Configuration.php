@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -33,7 +35,7 @@ class Configuration implements ConfigurationInterface
      *
      * @param string $root
      */
-    public function __construct($root)
+    public function __construct(string $root)
     {
         $this->root = $root;
     }
@@ -41,7 +43,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root($this->getRoot());
@@ -58,7 +60,7 @@ class Configuration implements ConfigurationInterface
      *
      * @return string
      */
-    public function getRoot()
+    public function getRoot(): string
     {
         return $this->root;
     }

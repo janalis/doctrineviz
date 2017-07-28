@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Test\Command;
 
 use Janalis\Doctrineviz\Command\DoctrinevizCommand;
@@ -127,6 +129,7 @@ class DoctrinevizCommandTest extends DoctrinevizTestCase
         ]), $command->getDefinition());
         $output = new BufferedOutput();
         $command->execute($input, $output);
+        $this->assertNotNull($output);
     }
 
     /**

@@ -1,3 +1,4 @@
+strict: true
 header: |
     /*
      * This file is part of the doctrineviz package

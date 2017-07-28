@@ -13,16 +13,16 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Graphviz;
 
-class Vertex extends Node
+class Vertex extends Element implements VertexInterface
 {
+    use Attributable;
     use Edgeable;
 
-    /** @var string */
-    protected $id;
-
-    /** @var Record[] */
+    /** @var RecordInterface[] */
     protected $records = [];
 
     /**
@@ -38,22 +38,22 @@ class Vertex extends Node
     /**
      * Get attributes.
      *
-     * @return Attribute[]
+     * @return AttributeInterface[]
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $this->createAttribute('label', count($this->records) ? mb_convert_case($this->id, MB_CASE_UPPER).'|'.implode('|', $this->records) : $this->id);
 
-        return parent::getAttributes();
+        return $this->attributes ? array_values($this->attributes) : [];
     }
 
     /**
      * Vertex constructor.
      *
-     * @param string $id
-     * @param Graph  $graph
+     * @param string         $id
+     * @param GraphInterface $graph
      */
-    public function __construct($id = null, $graph = null)
+    public function __construct(string $id = null, GraphInterface $graph = null)
     {
         $this->id = $id;
         if ($graph) {
@@ -62,31 +62,11 @@ class Vertex extends Node
     }
 
     /**
-     * Get id.
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set id.
-     *
-     * @param $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * Get records.
      *
-     * @return Record[]
+     * @return RecordInterface[]
      */
-    public function getRecords()
+    public function getRecords(): array
     {
         return $this->records ? array_values($this->records) : [];
     }
@@ -94,9 +74,9 @@ class Vertex extends Node
     /**
      * Set records.
      *
-     * @param Record[] $records
+     * @param RecordInterface[] $records
      */
-    public function setRecords($records)
+    public function setRecords(array $records): void
     {
         foreach ($records as $record) {
             $this->addRecord($record);
@@ -106,9 +86,9 @@ class Vertex extends Node
     /**
      * Add record.
      *
-     * @param Record $record
+     * @param RecordInterface $record
      */
-    public function addRecord(Record $record)
+    public function addRecord(RecordInterface $record): void
     {
         $record->setGraph($this->graph);
         $record->setVertex($this);
@@ -118,9 +98,9 @@ class Vertex extends Node
     /**
      * Remove record.
      *
-     * @param Record $record
+     * @param RecordInterface $record
      */
-    public function removeRecord(Record $record)
+    public function removeRecord(RecordInterface $record): void
     {
         unset($this->records[$record->getId()]);
     }
@@ -130,9 +110,9 @@ class Vertex extends Node
      *
      * @param string $id
      *
-     * @return Record
+     * @return RecordInterface
      */
-    public function createRecord($id)
+    public function createRecord(string $id): RecordInterface
     {
         return new Record($id, $this);
     }
@@ -142,7 +122,7 @@ class Vertex extends Node
      *
      * @param string $id
      */
-    public function deleteRecord($id)
+    public function deleteRecord(string $id): void
     {
         unset($this->records[$id]);
     }
@@ -150,14 +130,14 @@ class Vertex extends Node
     /**
      * Get record.
      *
-     * @param $id
+     * @param string $id
      *
-     * @return Record
+     * @return RecordInterface
      */
-    public function getRecord($id)
+    public function getRecord(string $id): ?RecordInterface
     {
         if (!array_key_exists($id, $this->records)) {
-            return;
+            return null;
         }
 
         return $this->records[$id];

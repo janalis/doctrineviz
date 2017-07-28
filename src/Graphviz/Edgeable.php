@@ -13,19 +13,21 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Graphviz;
 
 trait Edgeable
 {
-    /** @var Graph */
+    /** @var GraphInterface */
     protected $graph;
 
     /**
      * Get graph.
      *
-     * @return Graph
+     * @return GraphInterface
      */
-    public function getGraph()
+    public function getGraph(): ?GraphInterface
     {
         return $this->graph;
     }
@@ -33,9 +35,9 @@ trait Edgeable
     /**
      * Set graph.
      *
-     * @param Graph $graph
+     * @param GraphInterface|null $graph
      */
-    public function setGraph($graph)
+    public function setGraph(GraphInterface $graph = null): void
     {
         $this->graph = $graph;
     }
@@ -43,12 +45,14 @@ trait Edgeable
     /**
      * Add edge to.
      *
-     * @param Vertex|Record $element
-     * @param null|string   $label
+     * @param ElementInterface $element
+     * @param null|string      $label
      *
-     * @return Edge
+     * @return EdgeInterface
+     *
+     * @throws \RuntimeException
      */
-    public function addEdgeTo($element, $label = null)
+    public function addEdgeTo(ElementInterface $element, string $label = null): EdgeInterface
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
@@ -60,10 +64,12 @@ trait Edgeable
     /**
      * Remove edge to.
      *
-     * @param Vertex|Record $element
-     * @param null|string   $label
+     * @param ElementInterface $element
+     * @param null|string      $label
+     *
+     * @throws \RuntimeException
      */
-    public function removeEdgeTo($element, $label = null)
+    public function removeEdgeTo(ElementInterface $element, string $label = null): void
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
@@ -74,12 +80,14 @@ trait Edgeable
     /**
      * Add edge from.
      *
-     * @param Vertex|Record $element
-     * @param null|string   $label
+     * @param ElementInterface $element
+     * @param null|string      $label
      *
-     * @return Edge
+     * @return EdgeInterface
+     *
+     * @throws \RuntimeException
      */
-    public function addEdgeFrom($element, $label = null)
+    public function addEdgeFrom(ElementInterface $element, string $label = null): EdgeInterface
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
@@ -93,8 +101,10 @@ trait Edgeable
      *
      * @param Vertex|Record $element
      * @param null|string   $label
+     *
+     * @throws \RuntimeException
      */
-    public function removeEdgeFrom($element, $label = null)
+    public function removeEdgeFrom($element, string $label = null): void
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
