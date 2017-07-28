@@ -13,12 +13,14 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Graphviz;
 
-abstract class Node
+trait Attributable
 {
     /** @var Attribute[] */
-    protected $attributes;
+    protected $attributes = [];
 
     /**
      * Indent all.
@@ -28,11 +30,11 @@ abstract class Node
      *
      * @return array
      */
-    protected function indentAll(array $strings = null, $spaces = 2)
+    protected function indentAll(array $strings = null, int $spaces = 2): array
     {
         $strings = $strings ?: [];
         foreach ($strings as $key => $string) {
-            $strings[$key] = $this->indent($string, $spaces);
+            $strings[$key] = $this->indent((string) $string, $spaces);
         }
 
         return $strings;
@@ -46,7 +48,7 @@ abstract class Node
      *
      * @return string
      */
-    protected function indent($string, $spaces = 2)
+    protected function indent(string $string, int $spaces = 2): string
     {
         $pad = str_repeat(' ', $spaces);
 
@@ -56,9 +58,9 @@ abstract class Node
     /**
      * Get attributes.
      *
-     * @return Attribute[]
+     * @return AttributeInterface[]
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes ? array_values($this->attributes) : [];
     }
@@ -66,9 +68,9 @@ abstract class Node
     /**
      * Set attributes.
      *
-     * @param Attribute[] $attributes
+     * @param AttributeInterface[] $attributes
      */
-    public function setAttributes($attributes)
+    public function setAttributes($attributes): void
     {
         foreach ($attributes as $attribute) {
             $this->attributes[$attribute->getId()] = $attribute;
@@ -78,12 +80,14 @@ abstract class Node
     /**
      * Get attribute.
      *
-     * @return string|null
+     * @param string $id
+     *
+     * @return AttributeInterface|null
      */
-    public function getAttribute($id)
+    public function getAttribute(string $id): ?AttributeInterface
     {
         if (!array_key_exists($id, $this->attributes)) {
-            return;
+            return null;
         }
 
         return $this->attributes[$id];
@@ -95,9 +99,9 @@ abstract class Node
      * @param string $id
      * @param string $value
      *
-     * @return Attribute
+     * @return AttributeInterface
      */
-    public function createAttribute($id, $value)
+    public function createAttribute($id, $value): AttributeInterface
     {
         $attribute = new Attribute($id, $value);
         $this->attributes[$id] = $attribute;
@@ -110,7 +114,7 @@ abstract class Node
      *
      * @param string $id
      */
-    public function deleteAttribute($id)
+    public function deleteAttribute(string $id): void
     {
         unset($this->attributes[$id]);
     }
@@ -118,9 +122,9 @@ abstract class Node
     /**
      * Add attribute.
      *
-     * @param Attribute $attribute
+     * @param AttributeInterface $attribute
      */
-    public function addAttribute(Attribute $attribute)
+    public function addAttribute(AttributeInterface $attribute): void
     {
         $this->attributes[$attribute->getId()] = $attribute;
     }
@@ -128,9 +132,9 @@ abstract class Node
     /**
      * Remove attribute.
      *
-     * @param Attribute $attribute
+     * @param AttributeInterface $attribute
      */
-    public function removeAttribute(Attribute $attribute)
+    public function removeAttribute(AttributeInterface $attribute): void
     {
         unset($this->attributes[$attribute->getId()]);
     }

@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Test\DependencyInjection;
 
 use Janalis\Doctrineviz\DependencyInjection\DoctrinevizBundleExtension;
@@ -79,5 +81,6 @@ class DoctrinevizBundleExtensionTest extends DoctrinevizTestCase
         $containerBuilder = $this->getMockBuilder(ContainerBuilder::class)->getMock();
         $extension = new DoctrinevizBundleExtension();
         $extension->load([], $containerBuilder);
+        $this->assertNotNull($extension);
     }
 }

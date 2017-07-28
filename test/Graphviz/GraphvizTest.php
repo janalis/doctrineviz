@@ -13,11 +13,14 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Test\Graphviz;
 
 use Janalis\Doctrineviz\Graphviz\Graph;
 use Janalis\Doctrineviz\Graphviz\Graphviz;
 use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
+use Symfony\Component\Process\Process;
 
 /**
  * Graphviz test.
@@ -93,6 +96,7 @@ class GraphvizTest extends DoctrinevizTestCase
     {
         $graph = new Graph();
         $this->setMethodAccessible(Graphviz::class, 'execute');
+        $process = $this->getMockBuilder(Process::class)->disableOriginalConstructor()->getMock();
         $graphviz = $this->getMockBuilder(Graphviz::class)
             ->setMethods([
                 'createImageFile',
@@ -104,7 +108,7 @@ class GraphvizTest extends DoctrinevizTestCase
             ->will($this->returnValue('foo'));
         $graphviz->expects($this->once())
             ->method('execute')
-            ->will($this->returnValue('bar'));
+            ->will($this->returnValue($process));
         $graphviz->display($graph);
     }
 

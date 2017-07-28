@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Test\Graphviz;
 
 use Janalis\Doctrineviz\Graphviz\Edge;
@@ -28,11 +30,11 @@ use Janalis\Doctrineviz\Test\DoctrinevizTestCase;
 class EdgeTest extends DoctrinevizTestCase
 {
     /**
-     * Test accessors.
+     * Test constructor.
      *
      * @group graphviz
      */
-    public function testAccessors()
+    public function testConstructor()
     {
         // init values
         $from = $this->getMockBuilder(Vertex::class)
@@ -59,12 +61,28 @@ class EdgeTest extends DoctrinevizTestCase
             '];', (string) $edge);
         $this->assertEquals($from, $edge->getFrom());
         $this->assertEquals($to, $edge->getTo());
+    }
+    /**
+     * Test accessors.
+     *
+     * @group graphviz
+     */
+    public function testAccessors()
+    {
+        // init values
+        $from = $this->getMockBuilder(Vertex::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $to = $this->getMockBuilder(Record::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         // getters and setters
-        $edge->setFrom(null);
-        $edge->setTo(null);
+        $edge = new Edge();
+        $edge->setFrom($from);
+        $edge->setTo($to);
         $edge->setLabel(null);
-        $this->assertNull($edge->getFrom());
-        $this->assertNull($edge->getTo());
+        $this->assertEquals($from, $edge->getFrom());
+        $this->assertEquals($to, $edge->getTo());
         $this->assertNull($edge->getLabel());
     }
 }

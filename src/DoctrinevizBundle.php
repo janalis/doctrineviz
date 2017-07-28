@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz;
 
 use Janalis\Doctrineviz\DependencyInjection\DoctrinevizBundleExtension;
@@ -28,7 +30,7 @@ class DoctrinevizBundle extends Bundle
      *
      * @return DoctrinevizBundleExtension
      */
-    public function getContainerExtension()
+    public function getContainerExtension(): DoctrinevizBundleExtension
     {
         return new DoctrinevizBundleExtension();
     }
