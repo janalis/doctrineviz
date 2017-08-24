@@ -13,7 +13,7 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Janalis\Doctrineviz\Graphviz;
 
@@ -89,9 +89,11 @@ class Graphviz
         switch (true) {
             case 0 === stripos(PHP_OS, 'WIN'):
                 $binary = 'start';
+
                 break;
             case 'DARWIN' === strtoupper(PHP_OS):
                 $binary = 'open';
+
                 break;
             default:
                 $binary = 'xdg-open';
@@ -164,7 +166,7 @@ class Graphviz
      */
     protected function execute(string $format, ...$args): Process
     {
-        $process = new Process(sprintf($format, ...array_map(function($arg, $index) use ($format) {
+        $process = new Process(sprintf($format, ...array_map(function ($arg, $index) use ($format) {
             return 0 === $index && 0 === strpos('%s', $format) ? escapeshellcmd($arg) : escapeshellarg($arg);
         }, $args, array_keys($args))));
         $process->mustRun();

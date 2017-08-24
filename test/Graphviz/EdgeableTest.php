@@ -65,11 +65,13 @@ class EdgeableTest extends DoctrinevizTestCase
         // exceptions
         $vertex1->setGraph(null);
         $vertex2->setGraph(null);
+
         try {
             $vertex1->addEdgeTo($vertex2);
             $this->fail('Exception should have been thrown.');
         } catch (\Exception $ignore) {
         }
+
         try {
             $vertex1->removeEdgeTo($vertex2);
             $this->fail('Exception should have been thrown.');
@@ -99,11 +101,13 @@ class EdgeableTest extends DoctrinevizTestCase
         // exceptions
         $vertex1->setGraph(null);
         $vertex2->setGraph(null);
+
         try {
             $vertex1->addEdgeFrom($vertex2);
             $this->fail('Exception should have been thrown.');
         } catch (\Exception $ignore) {
         }
+
         try {
             $vertex1->removeEdgeFrom($vertex2);
             $this->fail('Exception should have been thrown.');

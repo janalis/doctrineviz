@@ -13,7 +13,7 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Janalis\Doctrineviz\DependencyInjection;
 
