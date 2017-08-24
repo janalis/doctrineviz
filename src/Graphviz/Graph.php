@@ -13,7 +13,7 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Janalis\Doctrineviz\Graphviz;
 
@@ -32,12 +32,9 @@ class Graph implements GraphInterface
      */
     public function __toString()
     {
-        return 'digraph g {'.PHP_EOL.(!count($this->getAttributes()) ? '' :
-            implode(PHP_EOL, $this->indentAll($this->getAttributes())).
-            PHP_EOL).(!count($this->getVertices()) ? '' :
-            implode(PHP_EOL, $this->indentAll($this->getVertices())).
-            PHP_EOL).(!count($this->getEdges()) ? '' :
-            implode(PHP_EOL, $this->indentAll($this->getEdges())).
+        return 'digraph g {'.PHP_EOL.(!count($this->getAttributes()) ? '' : implode(PHP_EOL, $this->indentAll($this->getAttributes())).
+            PHP_EOL).(!count($this->getVertices()) ? '' : implode(PHP_EOL, $this->indentAll($this->getVertices())).
+            PHP_EOL).(!count($this->getEdges()) ? '' : implode(PHP_EOL, $this->indentAll($this->getEdges())).
             PHP_EOL).'}';
     }
 

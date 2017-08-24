@@ -13,7 +13,7 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Janalis\Doctrineviz\Command;
 
@@ -62,7 +62,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
         $pattern = '/'.$input->getOption('pattern').'/';
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('doctrine')->getManager();
-        $entities = array_filter($em->getConfiguration()->getMetadataDriverImpl()->getAllClassNames(), function ($entity) use ($pattern) {
+        $entities = array_filter($em->getConfiguration()->getMetadataDriverImpl()->getAllClassNames(), function($entity) use ($pattern) {
             return preg_match($pattern, $entity);
         });
         $graph = new Graph();
