@@ -70,7 +70,7 @@ trait Attributable
      *
      * @param AttributeInterface[] $attributes
      */
-    public function setAttributes($attributes): void
+    public function setAttributes(array $attributes): void
     {
         foreach ($attributes as $attribute) {
             $this->attributes[$attribute->getId()] = $attribute;
@@ -101,7 +101,7 @@ trait Attributable
      *
      * @return AttributeInterface
      */
-    public function createAttribute($id, $value): AttributeInterface
+    public function createAttribute(string $id, string $value): AttributeInterface
     {
         $attribute = new Attribute($id, $value);
         $this->attributes[$id] = $attribute;

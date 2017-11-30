@@ -99,12 +99,12 @@ trait Edgeable
     /**
      * Remove edge from.
      *
-     * @param Vertex|Record $element
-     * @param null|string   $label
+     * @param ElementInterface $element
+     * @param null|string      $label
      *
      * @throws \RuntimeException
      */
-    public function removeEdgeFrom($element, string $label = null): void
+    public function removeEdgeFrom(ElementInterface $element, string $label = null): void
     {
         if (!$this->graph) {
             throw new \RuntimeException('Graph is not defined');
