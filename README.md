@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/janalis/doctrineviz.svg?branch=master)](https://travis-ci.org/janalis/doctrineviz)
 [![Coverage Status](https://coveralls.io/repos/github/janalis/doctrineviz/badge.svg?branch=master)](https://coveralls.io/github/janalis/doctrineviz?branch=master)
 [![SensioLabs Insight](https://img.shields.io/sensiolabs/i/dc69f3e1-060d-4ac8-9fb2-94ced25992f2.svg)](https://insight.sensiolabs.com/projects/dc69f3e1-060d-4ac8-9fb2-94ced25992f2)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/janalis/doctrineviz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/janalis/doctrineviz/?branch=master)
 [![Style CI](https://styleci.io/repos/79649553/shield?style=flat)](https://styleci.io/repos/79649553)
 
 Render a graphical representation of a Doctrine2 mapped database.
