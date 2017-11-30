@@ -1,13 +1,25 @@
 <?php
 
+/*
+ * This file is part of the doctrineviz package
+ *
+ * Copyright (c) 2017 Pierre Hennequart
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Feel free to edit as you please, and have fun.
+ *
+ * @author Pierre Hennequart <pierre@janalis.com>
+ */
+
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Graphviz;
 
-class Record
+class Record extends Element implements RecordInterface
 {
     use Edgeable;
-
-    /** @var string */
-    protected $id;
 
     /** @var Vertex */
     protected $vertex;
@@ -23,9 +35,9 @@ class Record
     /**
      * Get graph.
      *
-     * @return Graph|null
+     * @return GraphInterface|null
      */
-    public function getGraph()
+    public function getGraph(): ?GraphInterface
     {
         return $this->graph;
     }
@@ -33,10 +45,10 @@ class Record
     /**
      * Record constructor.
      *
-     * @param null|string $id
-     * @param null|Vertex $vertex
+     * @param null|string          $id
+     * @param null|VertexInterface $vertex
      */
-    public function __construct($id = null, Vertex $vertex = null)
+    public function __construct(string $id = null, VertexInterface $vertex = null)
     {
         $this->id = $id;
         if ($vertex) {
@@ -45,31 +57,11 @@ class Record
     }
 
     /**
-     * Get id.
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set id.
-     *
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
      * Get vertex.
      *
-     * @return Vertex
+     * @return VertexInterface
      */
-    public function getVertex()
+    public function getVertex(): ?VertexInterface
     {
         return $this->vertex;
     }
@@ -77,9 +69,9 @@ class Record
     /**
      * Set vertex.
      *
-     * @param Vertex $vertex
+     * @param VertexInterface $vertex
      */
-    public function setVertex($vertex)
+    public function setVertex(VertexInterface $vertex): void
     {
         $this->vertex = $vertex;
     }

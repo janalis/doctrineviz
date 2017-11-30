@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Command;
 
 use Doctrine\ORM\EntityManager;
@@ -55,7 +57,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
      *
      * @return int Status code
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $pattern = '/'.$input->getOption('pattern').'/';
         /** @var EntityManager $em */
@@ -159,17 +161,19 @@ class DoctrinevizCommand extends ContainerAwareCommand
         $binary = $input->getOption('binary', null);
         $path = $input->getOption('output-path', null);
         $graphviz = new Graphviz($format, $binary);
-        if (!$path) {
-            if ('dot' === $format) {
-                $output->writeln((string) $graph);
-            } else {
-                $graphviz->display($graph);
-            }
+        if ($path) {
+            return (int) !file_put_contents($path, $graphviz->createImageData($graph));
+        }
+        if ('dot' === $format) {
+            $output->writeln((string) $graph);
 
             return 0;
         }
+        // @codeCoverageIgnoreStart
+        $graphviz->display($graph);
 
-        return (int) !file_put_contents($path, $graphviz->createImageData($graph));
+        return 0;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -180,7 +184,7 @@ class DoctrinevizCommand extends ContainerAwareCommand
      *
      * @return string
      */
-    protected function getFieldMappingDisplayName(array $fieldMapping, $nameKey = 'columnName')
+    protected function getFieldMappingDisplayName(array $fieldMapping, string $nameKey = 'columnName'): string
     {
         $name = $fieldMapping[$nameKey];
         $type = array_key_exists('type', $fieldMapping) ? $fieldMapping['type'] : 'integer';

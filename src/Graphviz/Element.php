@@ -15,25 +15,30 @@
 
 declare(strict_types=1);
 
-namespace Janalis\Doctrineviz\Test\Entity;
+namespace Janalis\Doctrineviz\Graphviz;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity()
- * @ORM\Table(name="email")
- */
-class Email
+abstract class Element implements ElementInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    /** @var string */
     protected $id;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
-     **/
-    protected $address;
+     * Get id.
+     *
+     * @return string
+     */
+    public function getId(): ?string
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set id.
+     *
+     * @param string $id
+     */
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
 }

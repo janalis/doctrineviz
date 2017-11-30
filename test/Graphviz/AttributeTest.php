@@ -13,6 +13,8 @@
  * @author Pierre Hennequart <pierre@janalis.com>
  */
 
+declare(strict_types=1);
+
 namespace Janalis\Doctrineviz\Test\Graphviz;
 
 use Janalis\Doctrineviz\Graphviz\Attribute;
