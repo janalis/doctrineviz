@@ -5,6 +5,10 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+### Added
+
+- Makefile developer commands for setup, quality gates, tests, coverage, mutation testing and documentation, shared with GitHub Actions.
+
 ### Fixed
 
 - Retire obsolete Scrutinizer, StyleCI and Travis hooks so legacy checks no longer report failures alongside GitHub Actions.

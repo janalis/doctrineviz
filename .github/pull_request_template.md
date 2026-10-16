@@ -8,8 +8,8 @@
 
 ## Checklist
 
-- [ ] `composer verify` passes
+- [ ] `make verify` passes
 - [ ] Coverage and Infection pass with 100% overall MSI and covered MSI
-- [ ] Documentation builds with `npm run docs:build --prefix docs`
+- [ ] Documentation builds with `make docs`
 - [ ] User-visible changes are recorded under `[Unreleased]` in `CHANGELOG.md`
 - [ ] Fixtures and examples are synthetic; no credentials, private URLs, personal data or database dumps are included

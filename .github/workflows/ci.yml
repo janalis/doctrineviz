@@ -46,7 +46,7 @@ jobs:
           else
             composer update --no-interaction --prefer-dist
           fi
-      - run: composer test
+      - run: make test
 
   quality:
     runs-on: ubuntu-latest
@@ -58,12 +58,12 @@ jobs:
           coverage: none
           tools: composer:v2
       - run: composer install --no-interaction --prefer-dist
-      - run: composer validate --strict
-      - run: composer audit
-      - run: composer format:check
-      - run: composer lint
-      - run: composer analyze
-      - run: python3 -m unittest discover -s tests -p '*_test.py'
+      - run: make validate
+      - run: make audit
+      - run: make fmt-check
+      - run: make lint
+      - run: make analyze
+      - run: make test-release
 
   mutation:
     runs-on: ubuntu-latest
@@ -77,16 +77,8 @@ jobs:
           tools: composer:v2
       - run: sudo apt-get update -qq && sudo apt-get install -y graphviz
       - run: composer install --no-interaction --prefer-dist
-      - run: composer test:coverage
-      - name: Require full statement coverage
-        run: |
-          python3 - <<'PYCODE'
-          import xml.etree.ElementTree as ET
-          metrics = ET.parse('var/coverage/clover.xml').find('project/metrics').attrib
-          assert int(metrics['statements']) > 0
-          assert metrics['statements'] == metrics['coveredstatements'], metrics
-          PYCODE
-      - run: composer infection
+      - run: make coverage
+      - run: make infection
       - if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -120,7 +112,7 @@ jobs:
           tools: composer:v2
       - run: sudo apt-get update -qq && sudo apt-get install -y graphviz
       - run: composer install --no-interaction --prefer-dist
-      - run: composer test
+      - run: make test
         env:
           DOCTRINEVIZ_TEST_DATABASE_URL: mysql://doctrineviz:synthetic-ci-only@127.0.0.1:3306/doctrineviz_test
 
@@ -135,9 +127,8 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: docs/package-lock.json
-      - run: npm ci --prefix docs
+      - run: make docs
       - run: npm audit --prefix docs
-      - run: npm run docs:build --prefix docs
 
   workflows:
     runs-on: ubuntu-latest
@@ -153,7 +144,7 @@ jobs:
           sha256sum --check --ignore-missing actionlint_1.7.12_checksums.txt
           tar -xzf actionlint_1.7.12_linux_amd64.tar.gz actionlint
           cd "$GITHUB_WORKSPACE"
-          "$RUNNER_TEMP/actionlint/actionlint"
+          make workflows ACTIONLINT="$RUNNER_TEMP/actionlint/actionlint"
 
   success:
     if: always()

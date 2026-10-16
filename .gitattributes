@@ -11,3 +11,4 @@
 /docs/.vitepress export-ignore
 /docs/package.json export-ignore
 /docs/package-lock.json export-ignore
+/Makefile export-ignore

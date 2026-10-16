@@ -69,10 +69,10 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) and the
 Use synthetic schemas in reports and tests; redact connection details and private data.
 
 ```sh
-composer install
-composer verify
-composer test:coverage  # enable PCOV or Xdebug first
-composer infection     # required overall MSI and covered MSI: 100%
+make install
+make verify    # formatting, lint, analysis, workflows, tests, 100% coverage and MSI
+make docs      # build the VitePress documentation
+make help      # list all developer commands
 ```
 
 ## License

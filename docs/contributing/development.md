@@ -2,25 +2,28 @@
 
 ## Setup
 
-Use PHP 8.4+, Composer 2, Graphviz, Node.js 22+ and npm. SQLite support is needed
+Use PHP 8.4+, Composer 2, GNU Make, Python 3, Graphviz, Node.js 22+ and npm.
+Install actionlint and ShellCheck for workflow checks. SQLite support is needed
 for tests. Tests run on disposable in-memory schemas; no application database is required.
 
 ```sh
-composer install
-composer verify
-npm ci --prefix docs
-npm run docs:dev --prefix docs
+make install
+make verify
+make docs-dev
 ```
 
 ## Quality checks
 
 ```sh
-composer format         # apply Mago formatting
-composer format:check   # check formatting without changes
-composer lint           # Mago lint rules
-composer analyze        # Mago type analysis, without a baseline
-composer test           # PHPUnit unit and integration tests
-composer audit
+make fmt           # apply Mago formatting
+make fmt-check     # check formatting without changes
+make lint          # Mago lint rules
+make analyze       # Mago type analysis, without a baseline
+make workflows     # actionlint and ShellCheck
+make test          # PHPUnit and release-helper tests
+make audit         # Composer dependency security advisories
+make verify        # complete PHP and workflow quality gate
+make help          # list all developer commands
 ```
 
 Mago's configuration sets the PHP target and code style. Heuristic complexity
@@ -28,15 +31,18 @@ metrics are configured separately from correctness checks.
 
 ## Coverage and mutation testing
 
-Enable PCOV or Xdebug before collecting coverage:
+Install PCOV or Xdebug to collect coverage. The Makefile enables PCOV for coverage
+commands and sets `XDEBUG_MODE=coverage` for Xdebug. Both test runs and Infection's
+initial coverage process receive the same PHP flags:
 
 ```sh
-php -d pcov.enabled=1 vendor/bin/phpunit --coverage-text
-composer test:coverage
-composer infection
+make coverage
+make infection
+make infection INFECTION_THREADS=4
 ```
 
-Both overall MSI and covered MSI must be **100%**. Strengthen tests for escaped
+`make coverage` requires **100% statement coverage**. Both overall MSI and
+covered MSI must be **100%**. Strengthen tests for escaped
 mutations. Any proven equivalent mutation needs a narrowly scoped exclusion and
 a written explanation; do not lower the thresholds or exclude entire classes.
 
@@ -48,7 +54,7 @@ disposable MariaDB schema; it never uses an application database.
 The release helper has standard-library Python tests:
 
 ```sh
-python3 -m unittest discover -s tests -p '*_test.py'
+make test-release
 ```
 
 ## Documentation
@@ -57,10 +63,26 @@ VitePress builds the Markdown in `docs/`. Search runs locally in the browser;
 there are no analytics integrations. Dead internal links fail the build.
 
 ```sh
-npm ci --prefix docs
-npm run docs:build --prefix docs
-npm run docs:preview --prefix docs
+make docs
+make docs-dev
+make docs-preview
 ```
+
+## Tool overrides and cleanup
+
+`COMPOSER`, `PHP`, `PYTHON`, `NPM` and `ACTIONLINT` can be overridden on the command
+line. `COVERAGE_PHP_FLAGS` defaults to `-d pcov.enabled=1`; override it when your
+PHP setup needs different coverage options. For example:
+
+```sh
+make workflows ACTIONLINT=/path/to/actionlint
+make coverage COVERAGE_PHP_FLAGS="-d pcov.enabled=1 -d memory_limit=1G"
+```
+
+`make clean` removes generated coverage, mutation reports, PHPUnit caches and
+VitePress build/cache directories. Installed dependencies are retained. Checks
+run serially, including when Make is invoked with `-j`, to avoid shared-cache races.
+Composer scripts remain available for individual PHP checks.
 
 ## Before submitting
 
