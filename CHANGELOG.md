@@ -5,6 +5,10 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+### Fixed
+
+- Use the version tag alone as the GitHub release title.
+
 ## [0.4.1] - 2026-10-16
 
 ### Added

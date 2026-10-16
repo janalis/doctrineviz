@@ -95,7 +95,7 @@ jobs:
           TAG: ${{ needs.prepare.outputs.tag }}
         run: |
           if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
-            gh release create "$TAG" --verify-tag --title "doctrineviz $TAG" --notes-file "$RUNNER_TEMP/release-notes.md" --repo "$GITHUB_REPOSITORY"
+            gh release create "$TAG" --verify-tag --title "$TAG" --notes-file "$RUNNER_TEMP/release-notes.md" --repo "$GITHUB_REPOSITORY"
           fi
       - name: Refresh Packagist when optional credentials are configured
         env:
