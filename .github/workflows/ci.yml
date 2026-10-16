@@ -153,7 +153,7 @@ jobs:
           sha256sum --check --ignore-missing actionlint_1.7.12_checksums.txt
           tar -xzf actionlint_1.7.12_linux_amd64.tar.gz actionlint
           cd "$GITHUB_WORKSPACE"
-          "$RUNNER_TEMP/actionlint/actionlint" -shellcheck=''
+          "$RUNNER_TEMP/actionlint/actionlint"
 
   success:
     if: always()

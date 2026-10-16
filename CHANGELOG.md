@@ -9,6 +9,7 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 - Retire obsolete Scrutinizer, StyleCI and Travis hooks so legacy checks no longer report failures alongside GitHub Actions.
 - Explicitly run CI on generated release commits and require success before publishing the GitHub release.
+- Enable ShellCheck validation for workflow shell scripts.
 
 ## [0.4.0] - 2026-10-16
 

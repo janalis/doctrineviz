@@ -116,6 +116,7 @@ jobs:
               echo "Packagist has $TAG"
               exit 0
             fi
+            echo "Waiting for Packagist ($attempt/18)"
             sleep 10
           done
           echo '::error::Packagist has not received the tag. Check the package webhook, then retry publishing.'
