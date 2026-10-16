@@ -1,0 +1,123 @@
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: X.Y.Z, patch, minor or major
+        required: true
+        default: patch
+      dry_run:
+        description: Validate and prepare notes without publishing
+        type: boolean
+        default: true
+concurrency:
+  group: release
+  cancel-in-progress: false
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: bash
+jobs:
+  verify:
+    if: github.ref == 'refs/heads/master' && github.repository == 'janalis/doctrineviz'
+    uses: ./.github/workflows/ci.yml
+
+  prepare:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.prepare.outputs.version }}
+      tag: ${{ steps.prepare.outputs.tag }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: master
+          fetch-depth: 0
+      - name: Reject a stale workflow revision
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - id: prepare
+        env:
+          VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$DRY_RUN" = true ]; then
+            python3 tools/release.py "$VERSION" --notes "$RUNNER_TEMP/release-notes.md" --dry-run | tee -a "$GITHUB_OUTPUT"
+          else
+            python3 tools/release.py "$VERSION" --notes "$RUNNER_TEMP/release-notes.md" | tee -a "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-notes
+          path: ${{ runner.temp }}/release-notes.md
+      - if: ${{ !inputs.dry_run }}
+        env:
+          TAG: ${{ steps.prepare.outputs.tag }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add CHANGELOG.md
+          git commit -m "Release $TAG"
+          git tag -a "$TAG" -m "doctrineviz $TAG"
+          git push --atomic origin HEAD:refs/heads/master "refs/tags/$TAG:refs/tags/$TAG"
+
+  publish:
+    needs: prepare
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ needs.prepare.outputs.tag }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: release-notes
+          path: ${{ runner.temp }}
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+        run: |
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release create "$TAG" --verify-tag --title "doctrineviz $TAG" --notes-file "$RUNNER_TEMP/release-notes.md" --repo "$GITHUB_REPOSITORY"
+          fi
+      - name: Refresh Packagist when optional credentials are configured
+        env:
+          PACKAGIST_USERNAME: ${{ secrets.PACKAGIST_USERNAME }}
+          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
+        run: |
+          if [ -n "$PACKAGIST_USERNAME" ] && [ -n "$PACKAGIST_TOKEN" ]; then
+            curl -fsS -X POST -H 'Content-Type: application/json' -H "Authorization: Bearer $PACKAGIST_USERNAME:$PACKAGIST_TOKEN" -d '{"repository":{"url":"https://github.com/janalis/doctrineviz"}}' https://packagist.org/api/update-package
+          else
+            echo 'Using the existing Packagist GitHub webhook.'
+          fi
+      - name: Verify Packagist received the tag
+        env:
+          TAG: ${{ needs.prepare.outputs.tag }}
+        run: |
+          for attempt in $(seq 1 18); do
+            if curl -fsS https://repo.packagist.org/p2/janalis/doctrineviz.json > "$RUNNER_TEMP/packagist.json" && jq -e --arg tag "$TAG" '.packages["janalis/doctrineviz"][] | select((.version | ltrimstr("v")) == ($tag | ltrimstr("v")))' "$RUNNER_TEMP/packagist.json" > /dev/null; then
+              echo "Packagist has $TAG"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo '::error::Packagist has not received the tag. Check the package webhook, then retry publishing.'
+          exit 1
+
+  docs:
+    needs: [prepare, publish]
+    if: ${{ !inputs.dry_run }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/docs.yml
+    with:
+      ref: ${{ needs.prepare.outputs.tag }}

@@ -1,0 +1,27 @@
+# PHP API
+
+The renderer can run without a Symfony kernel:
+
+```php
+use Janalis\Doctrineviz\SchemaDotRenderer;
+
+// $connection is an existing Doctrine DBAL Connection.
+$schema = $connection->createSchemaManager()->introspectSchema();
+$renderer = new SchemaDotRenderer();
+$dot = $renderer->render($schema);
+file_put_contents('schema.dot', $dot);
+```
+
+`SchemaDotRenderer::render(Schema $schema, bool $inferGedmoTranslations = false): string`
+returns a complete DOT graph with no trailing newline. It does not connect to a
+database, launch Graphviz or write files. The console command adds a trailing newline.
+
+Pass `true` as the second argument to opt in to translation inference:
+
+```php
+$dot = $renderer->render($schema, inferGedmoTranslations: true);
+```
+
+Register custom types with DBAL before creating or introspecting the schema.
+The diagram uses their registered DBAL type names. Exceptions from the renderer
+propagate to PHP callers; the console command catches and sanitizes failures.

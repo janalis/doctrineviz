@@ -1,194 +1,69 @@
 <?php
 
-/*
- * This file is part of the doctrineviz package
- *
- * Copyright (c) 2017 Pierre Hennequart
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * Feel free to edit as you please, and have fun.
- *
- * @author Pierre Hennequart <pierre@janalis.com>
- */
-
 declare(strict_types=1);
 
 namespace Janalis\Doctrineviz\Command;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Janalis\Doctrineviz\Graphviz\Graph;
-use Janalis\Doctrineviz\Graphviz\Graphviz;
-use Janalis\Doctrineviz\Graphviz\Record;
-use Janalis\Doctrineviz\Graphviz\Vertex;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Doctrine\DBAL\Connection;
+use Doctrine\Persistence\ManagerRegistry;
+use Janalis\Doctrineviz\SchemaDotRenderer;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * doctrineviz command.
- */
-class DoctrinevizCommand extends ContainerAwareCommand
+#[AsCommand(name: 'doctrine:schema:graphviz', description: 'Generate Graphviz DOT from the database schema.')]
+final class DoctrinevizCommand extends Command
 {
-    const NAME = 'doctrine:generate:viz';
+    public function __construct(
+        private readonly ManagerRegistry $registry,
+        private readonly SchemaDotRenderer $renderer,
+    ) {
+        parent::__construct();
+    }
 
-    /**
-     * Configure.
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
-            ->setName(static::NAME)
-            ->setHelp('Generates database mapping')
-            ->addOption('pattern', 'p', InputOption::VALUE_OPTIONAL, 'Filter entities that match that PCRE pattern', '.*')
-            ->addOption('binary', 'b', InputOption::VALUE_OPTIONAL, 'Path to graphviz dot binary')
-            ->addOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Output format', 'png')
-            ->addOption('output-path', 'o', InputOption::VALUE_OPTIONAL, 'Output path');
+            ->addOption(
+                'connection',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Doctrine DBAL connection name (defaults to the default connection).',
+            )
+            ->addOption(
+                'infer-gedmo-translations',
+                null,
+                InputOption::VALUE_NONE,
+                'Infer translation links without database foreign keys.',
+            )
+            ->setHelp('bin/console doctrine:schema:graphviz > schema.dot && dot -Tsvg schema.dot -o schema.svg');
     }
 
-    /**
-     * Execute.
-     *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return int Status code
-     */
-    public function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $pattern = '/'.$input->getOption('pattern').'/';
-        /** @var EntityManager $em */
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $entities = array_filter($em->getConfiguration()->getMetadataDriverImpl()->getAllClassNames(), function ($entity) use ($pattern) {
-            return preg_match($pattern, $entity);
-        });
-        $graph = new Graph();
-        $graph->createAttribute('rankdir', 'LR');
-        $graph->createAttribute('ranksep', '3');
-        /** @var Vertex[] $tables */
-        $tables = [];
-        foreach ($entities as $entity) {
-            $metadata = $em->getClassMetadata($entity);
-            if ($metadata->getFieldNames()) {
-                $table = $graph->createVertex($metadata->getTableName());
-                $table->createAttribute('shape', 'record');
-                $table->createAttribute('width', '4');
-                foreach ($metadata->getFieldNames() as $fieldName) {
-                    $fieldMapping = $metadata->getFieldMapping($fieldName);
-                    $table->addRecord(new Record($this->getFieldMappingDisplayName($fieldMapping)));
-                }
-                $tables[$entity] = $table;
-            }
-        }
-        foreach ($entities as $entity) {
-            $metadata = $em->getClassMetadata($entity);
-            foreach ($metadata->getAssociationMappings() as $associationMapping) {
-                if (array_key_exists('joinTable', $associationMapping) && $associationMapping['joinTable']) {
-                    $joinTable = $associationMapping['joinTable'];
-                    $table = $graph->createVertex($joinTable['name']);
-                    $table->createAttribute('shape', 'record');
-                    $table->createAttribute('width', '4');
-                    if (array_key_exists('joinColumns', $joinTable)) {
-                        $sourceEntity = $associationMapping['sourceEntity'];
-                        $joinColumns = $joinTable['joinColumns'];
-                        foreach ($joinColumns as $joinColumn) {
-                            $record = new Record($this->getFieldMappingDisplayName($joinColumn, 'name'));
-                            $table->addRecord($record);
-                            $nullable = false;
-                            if (array_key_exists($sourceEntity, $tables)) {
-                                $name = $this->getFieldMappingDisplayName($joinColumn, 'referencedColumnName');
-                                $nullable = $joinColumn['nullable'];
-                                $tables[$sourceEntity]->addRecord($to = $graph->getVertex($tables[$sourceEntity]->getId())->getRecord($name) ?: new Record($name));
-                            }
-                            $edge = $record->addEdgeTo($to);
-                            $edge->createAttribute('headlabel', $nullable ? '0..1' : '1');
-                            $edge->createAttribute('taillabel', '*');
-                        }
-                    }
-                    if (array_key_exists('inverseJoinColumns', $joinTable)) {
-                        $targetEntity = $associationMapping['targetEntity'];
-                        $inverseJoinColumns = $joinTable['inverseJoinColumns'];
-                        foreach ($inverseJoinColumns as $inverseJoinColumn) {
-                            $record = new Record($this->getFieldMappingDisplayName($inverseJoinColumn, 'name'));
-                            $table->addRecord($record);
-                            $nullable = false;
-                            if (array_key_exists($targetEntity, $tables)) {
-                                $name = $this->getFieldMappingDisplayName($inverseJoinColumn, 'referencedColumnName');
-                                $nullable = $inverseJoinColumn['nullable'];
-                                $tables[$targetEntity]->addRecord($to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord($name) ?: new Record($name));
-                            }
-                            $edge = $record->addEdgeTo($to);
-                            $edge->createAttribute('headlabel', $nullable ? '0..1' : '1');
-                            $edge->createAttribute('taillabel', '*');
-                        }
-                    }
-                    $tables[$table->getId()] = $table;
-                } else {
-                    $targetEntity = $associationMapping['targetEntity'];
-                    if (!array_key_exists($targetEntity, $tables) || !array_key_exists('sourceToTargetKeyColumns', $associationMapping)) {
-                        continue;
-                    }
-                    $columns = $associationMapping['sourceToTargetKeyColumns'];
-                    $to = $graph->getVertex($tables[$targetEntity]->getId())->getRecord(array_values($columns)[0]);
-                    if (!$to) {
-                        $to = new Record($this->getFieldMappingDisplayName([
-                            'columnName' => array_values($columns)[0],
-                        ]));
-                        $tables[$targetEntity]->addRecord($to);
-                    }
-                    $from = $graph->getVertex($tables[$entity]->getId())->getRecord(array_keys($columns)[0]);
-                    if (!$from) {
-                        $from = new Record($this->getFieldMappingDisplayName([
-                            'columnName' => array_keys($columns)[0],
-                        ]));
-                        $tables[$entity]->addRecord($from);
-                    }
-                    $joinColumn = $associationMapping['joinColumns'][0];
-                    $nullable = !array_key_exists('nullable', $joinColumn) || $joinColumn['nullable'];
-                    $edge = $from->addEdgeTo($to);
-                    $edge->createAttribute('headlabel', $nullable ? '0..1' : '1');
-                    if (array_key_exists('type', $associationMapping)) {
-                        $edge->createAttribute('taillabel', ClassMetadataInfo::ONE_TO_ONE === $associationMapping['type'] ? '1' : '*');
-                    }
-                }
-            }
-        }
-        ksort($tables);
-        $format = $input->getOption('format', 'png');
-        $binary = $input->getOption('binary', null);
-        $path = $input->getOption('output-path', null);
-        $graphviz = new Graphviz($format, $binary);
-        if ($path) {
-            return (int) !file_put_contents($path, $graphviz->createImageData($graph));
-        }
-        if ('dot' === $format) {
-            $output->writeln((string) $graph);
+        try {
+            /** @var string|null $name */
+            $name = $input->getOption('connection');
+            /** @var Connection $connection */
+            $connection = $this->registry->getConnection($name);
+            $schema = $connection->createSchemaManager()->introspectSchema();
+            /** @var bool $infer */
+            $infer = $input->getOption('infer-gedmo-translations');
+            $dot = $this->renderer->render($schema, $infer);
+        } catch (\Throwable) {
+            // Driver exceptions may contain credentials, DSNs or private schema details.
+            ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->writeln(
+                '<error>Unable to inspect the database schema. Check the Doctrine connection and database permissions.</error>',
+            );
 
-            return 0;
+            return Command::FAILURE;
         }
-        // @codeCoverageIgnoreStart
-        $graphviz->display($graph);
 
-        return 0;
-        // @codeCoverageIgnoreEnd
-    }
+        $output->writeln($dot, OutputInterface::OUTPUT_RAW);
 
-    /**
-     * Get field mapping display name.
-     *
-     * @param array  $fieldMapping
-     * @param string $nameKey
-     *
-     * @return string
-     */
-    protected function getFieldMappingDisplayName(array $fieldMapping, string $nameKey = 'columnName'): string
-    {
-        $name = $fieldMapping[$nameKey];
-        $type = array_key_exists('type', $fieldMapping) ? $fieldMapping['type'] : 'integer';
-
-        return sprintf('%s : %s', $name, $type);
+        return Command::SUCCESS;
     }
 }

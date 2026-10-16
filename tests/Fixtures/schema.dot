@@ -1,0 +1,28 @@
+digraph database {
+  graph [rankdir=LR];
+  node [shape=plain];
+  t0 [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+      <TR><TD BGCOLOR="lightgray" COLSPAN="4"><B>author</B></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c0"><B>id</B></TD><TD ALIGN="LEFT">integer</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT">auto_increment</TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c1"><B>region</B></TD><TD ALIGN="LEFT">string(2)</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT"></TD></TR>
+    </TABLE>
+  >];
+  t1 [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+      <TR><TD BGCOLOR="lightgray" COLSPAN="4"><B>book</B></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c0"><B>id</B></TD><TD ALIGN="LEFT">integer</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT"></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c1"><I>author_id</I></TD><TD ALIGN="LEFT">integer</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT"></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c2"><I>author_region</I></TD><TD ALIGN="LEFT">string(2)</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT"></TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c3">title</TD><TD ALIGN="LEFT">string(120)</TD><TD ALIGN="LEFT">NULL</TD><TD ALIGN="LEFT">&lt;draft&gt; &amp; &quot;quoted&quot;</TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c4">zero</TD><TD ALIGN="LEFT">integer</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT">0</TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c5">zero_string</TD><TD ALIGN="LEFT">string</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT">0</TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c6">enabled</TD><TD ALIGN="LEFT">boolean</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT">false</TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c7">published</TD><TD ALIGN="LEFT">boolean</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT">true</TD></TR>
+      <TR><TD ALIGN="LEFT" PORT="c8">price</TD><TD ALIGN="LEFT">decimal</TD><TD ALIGN="LEFT">NOT NULL</TD><TD ALIGN="LEFT">1.25</TD></TR>
+    </TABLE>
+  >];
+  t1:c1:w -> t0:c0:w;
+  t1:c2:w -> t0:c1:w;
+  t1:c0:w -> t1:c0:w;
+}

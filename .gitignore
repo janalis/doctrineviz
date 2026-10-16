@@ -1,5 +1,13 @@
-/env/cache/
-/env/logs/
 /vendor/
-/env/config/parameters.yml
+/var/
+/.phpunit.cache/
 /phpunit.xml
+/infection.json5
+/mago.local.toml
+/auth.json
+/.env.local
+
+/docs/node_modules/
+/docs/.vitepress/cache/
+/docs/.vitepress/dist/
+/**/__pycache__/

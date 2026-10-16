@@ -1,0 +1,35 @@
+name: Bug report
+description: Report incorrect output or a failure using a minimal synthetic schema.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, connection URLs, private schemas, personal data or database dumps. Use a synthetic reproduction.
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versions
+      description: doctrineviz, PHP, Symfony, Doctrine DBAL, database engine and Graphviz versions.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Synthetic CREATE TABLE statements or DBAL schema and the command used.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Redacted output and error messages.
+    validations:
+      required: true

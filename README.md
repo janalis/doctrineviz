@@ -1,73 +1,80 @@
-# doctrineviz
+<p align="center">
+  <img src="docs/public/logo.svg" alt="doctrineviz" width="160">
+</p>
 
-[![Build Status](https://travis-ci.org/janalis/doctrineviz.svg?branch=master)](https://travis-ci.org/janalis/doctrineviz)
-[![Coverage Status](https://coveralls.io/repos/github/janalis/doctrineviz/badge.svg?branch=master)](https://coveralls.io/github/janalis/doctrineviz?branch=master)
-[![SensioLabs Insight](https://img.shields.io/sensiolabs/i/dc69f3e1-060d-4ac8-9fb2-94ced25992f2.svg)](https://insight.sensiolabs.com/projects/dc69f3e1-060d-4ac8-9fb2-94ced25992f2)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/janalis/doctrineviz/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/janalis/doctrineviz/?branch=master)
-[![Style CI](https://styleci.io/repos/79649553/shield?style=flat)](https://styleci.io/repos/79649553)
+<h1 align="center">doctrineviz</h1>
 
-Render a graphical representation of a Doctrine2 mapped database.
+<p align="center">
+  <strong>Your database schema, drawn.</strong><br>
+  Doctrine DBAL · Graphviz DOT · Symfony bundle
+</p>
 
-## Example
+<p align="center">
+  <a href="https://github.com/janalis/doctrineviz/actions/workflows/ci.yml"><img src="https://github.com/janalis/doctrineviz/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://janalis.github.io/doctrineviz/"><img src="https://github.com/janalis/doctrineviz/actions/workflows/docs.yml/badge.svg" alt="Docs"></a>
+  <a href="https://github.com/janalis/doctrineviz/releases"><img src="https://img.shields.io/github/v/release/janalis/doctrineviz?sort=semver" alt="Latest release"></a>
+  <a href="https://packagist.org/packages/janalis/doctrineviz"><img src="https://img.shields.io/packagist/v/janalis/doctrineviz" alt="Packagist"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/janalis/doctrineviz" alt="BSD-3-Clause license"></a>
+</p>
 
-![Example](example.png)
+<p align="center">
+  <a href="https://janalis.github.io/doctrineviz/"><strong>Documentation</strong></a> ·
+  <a href="https://janalis.github.io/doctrineviz/guide/installation">Installation</a> ·
+  <a href="https://janalis.github.io/doctrineviz/guide/usage">Command reference</a> ·
+  <a href="https://janalis.github.io/doctrineviz/guide/migration">Migration</a>
+</p>
 
-## Installation
+---
 
-Require package through composer:
-```bash
-$ composer require --dev janalis/doctrineviz
+doctrineviz reads your database schema through Doctrine DBAL and generates a
+Graphviz DOT diagram with tables, columns, primary keys and foreign keys.
+Run it in a Symfony application, or use the renderer directly with a DBAL
+schema. Doctrine ORM is optional.
+
+## Install
+
+```sh
+composer require --dev janalis/doctrineviz
 ```
 
-Then, enable the bundle by adding the following line in the `app/AppKernel.php` file of your project:
-```php
-// app/AppKernel.php
+Register `Janalis\Doctrineviz\DoctrinevizBundle::class` for the `dev` and
+`test` environments in `config/bundles.php`. Requires PHP 8.4+, Symfony
+7.4 or 8.x, DoctrineBundle 3.3+, and DBAL 4.5+.
+See [Installation](https://janalis.github.io/doctrineviz/guide/installation).
 
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        //...
-        if (in_array($this->getEnvironment(), ['dev', 'test'])) {
-            // ...
-            // Because the vendor code could be not present, you should check if the bundle is here before using it.
-            new Janalis\Doctrineviz\DoctrinevizBundle(),
-        }
+## Quick start
 
-
-        // ...
-    }
-
-    // ...
-}
+```sh
+php bin/console doctrine:schema:graphviz > schema.dot
+# Install Graphviz separately to render the DOT file.
+dot -Tsvg schema.dot -o schema.svg
+dot -Tpdf schema.dot -o schema.pdf
 ```
 
-In order to be able to use the graph drawing feature you'll have to install GraphViz (dot executable).
+![Example database diagram](docs/public/example.svg)
 
-### Mac OS
+## Highlights
 
-```bash
-$ brew install graphviz
+- **Database schema diagrams** show the actual schema, including tables not mapped by ORM.
+- **Column details** include DBAL type, length, nullability, defaults and auto-increment.
+- **Relationships** preserve composite foreign-key column pairs and self-references.
+- **Named connections** through `--connection=reporting`.
+- **Optional translation links** through `--infer-gedmo-translations`.
+- **Reusable renderer** accepts a DBAL `Schema` without booting Symfony.
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[development guide](https://janalis.github.io/doctrineviz/contributing/development).
+Use synthetic schemas in reports and tests; redact connection details and private data.
+
+```sh
+composer install
+composer verify
+composer test:coverage  # enable PCOV or Xdebug first
+composer infection     # required overall MSI and covered MSI: 100%
 ```
 
-### Ubuntu
+## License
 
-```bash
-$ sudo apt install -y graphviz
-```
-
-### Windows
-
-Windows users may [download GraphViZ for Windows](http://www.graphviz.org/Download_windows.php).
-
-## Usage
-
-Into your symfony project:
-```bash
-$ php app/console doctrine:generate:viz --help
-```
-
-## Credits
-
-- [globalcitizen/mysqlviz](https://github.com/globalcitizen/mysqlviz)
-- [graphp/graphviz](https://github.com/graphp/graphviz)
+[BSD-3-Clause](LICENSE).

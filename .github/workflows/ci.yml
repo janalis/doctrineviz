@@ -1,0 +1,166 @@
+name: ci
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: bash
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }} / Symfony ${{ matrix.symfony }} / ${{ matrix.dependencies }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.4', '8.5']
+        symfony: ['7.4.*', '8.0.*', '8.1.*']
+        dependencies: [highest]
+        include:
+          - php: '8.4'
+            symfony: '7.4.*'
+            dependencies: lowest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: pdo_sqlite, mbstring, dom
+          coverage: none
+          tools: composer:v2
+      - run: sudo apt-get update -qq && sudo apt-get install -y graphviz
+      - name: Select Symfony series
+        env:
+          SYMFONY_VERSION: ${{ matrix.symfony }}
+        run: python3 tools/ci-dependencies.py "$SYMFONY_VERSION"
+      - name: Resolve dependencies
+        env:
+          DEPENDENCIES: ${{ matrix.dependencies }}
+        run: |
+          if [ "$DEPENDENCIES" = lowest ]; then
+            composer update --prefer-lowest --prefer-stable --no-interaction --prefer-dist
+          else
+            composer update --no-interaction --prefer-dist
+          fi
+      - run: composer test
+
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.5'
+          coverage: none
+          tools: composer:v2
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer validate --strict
+      - run: composer audit
+      - run: composer format:check
+      - run: composer lint
+      - run: composer analyze
+      - run: python3 -m unittest discover -s tests -p '*_test.py'
+
+  mutation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.5'
+          extensions: pdo_sqlite, mbstring, dom
+          coverage: pcov
+          tools: composer:v2
+      - run: sudo apt-get update -qq && sudo apt-get install -y graphviz
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer test:coverage
+      - name: Require full statement coverage
+        run: |
+          python3 - <<'PYCODE'
+          import xml.etree.ElementTree as ET
+          metrics = ET.parse('var/coverage/clover.xml').find('project/metrics').attrib
+          assert int(metrics['statements']) > 0
+          assert metrics['statements'] == metrics['coveredstatements'], metrics
+          PYCODE
+      - run: composer infection
+      - if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: mutation-reports
+          path: |
+            var/infection.log
+            var/infection-summary.log
+
+  mariadb:
+    runs-on: ubuntu-latest
+    services:
+      database:
+        image: mariadb:11.4
+        env:
+          MARIADB_DATABASE: doctrineviz_test
+          MARIADB_USER: doctrineviz
+          MARIADB_PASSWORD: synthetic-ci-only
+          MARIADB_ROOT_PASSWORD: synthetic-root-ci-only
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s --health-timeout=5s --health-retries=10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
+        with:
+          php-version: '8.5'
+          extensions: pdo_mysql, pdo_sqlite
+          coverage: none
+          tools: composer:v2
+      - run: sudo apt-get update -qq && sudo apt-get install -y graphviz
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer test
+        env:
+          DOCTRINEVIZ_TEST_DATABASE_URL: mysql://doctrineviz:synthetic-ci-only@127.0.0.1:3306/doctrineviz_test
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: docs/package-lock.json
+      - run: npm ci --prefix docs
+      - run: npm audit --prefix docs
+      - run: npm run docs:build --prefix docs
+
+  workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Validate GitHub workflows
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download v1.7.12 --repo rhysd/actionlint --pattern 'actionlint_1.7.12_linux_amd64.tar.gz' --dir "$RUNNER_TEMP/actionlint"
+          gh release download v1.7.12 --repo rhysd/actionlint --pattern 'actionlint_1.7.12_checksums.txt' --dir "$RUNNER_TEMP/actionlint"
+          cd "$RUNNER_TEMP/actionlint"
+          sha256sum --check --ignore-missing actionlint_1.7.12_checksums.txt
+          tar -xzf actionlint_1.7.12_linux_amd64.tar.gz actionlint
+          cd "$GITHUB_WORKSPACE"
+          "$RUNNER_TEMP/actionlint/actionlint" -shellcheck=''
+
+  success:
+    if: always()
+    needs: [tests, quality, mutation, mariadb, docs, workflows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every check
+        env:
+          RESULTS: ${{ join(needs.*.result, ',') }}
+        run: test "$RESULTS" = success,success,success,success,success,success
