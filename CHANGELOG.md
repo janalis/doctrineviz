@@ -15,6 +15,7 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ### Fixed
 
+- Remove the artificial `book.id` self-reference from the documentation example diagram.
 - Retire obsolete Scrutinizer, StyleCI and Travis hooks so legacy checks no longer report failures alongside GitHub Actions.
 - Explicitly run CI on generated release commits and require success before publishing the GitHub release.
 - Enable ShellCheck validation for workflow shell scripts.
