@@ -5,6 +5,8 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-16
+
 ### Added
 
 - Makefile developer commands for setup, quality gates, tests, coverage, mutation testing and documentation, shared with GitHub Actions.
