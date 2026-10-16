@@ -9,6 +9,10 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 - Makefile developer commands for setup, quality gates, tests, coverage, mutation testing and documentation, shared with GitHub Actions.
 
+### Changed
+
+- Update pinned GitHub Actions for Node.js setup, artifact transfers and GitHub Pages.
+
 ### Fixed
 
 - Retire obsolete Scrutinizer, StyleCI and Travis hooks so legacy checks no longer report failures alongside GitHub Actions.
