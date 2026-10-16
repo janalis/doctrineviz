@@ -5,6 +5,8 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-16
+
 ### Changed
 
 - Replace ORM mapping visualization with live Doctrine DBAL schema introspection and Graphviz DOT output.
