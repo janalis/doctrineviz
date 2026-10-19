@@ -12,14 +12,14 @@ $dot = $renderer->render($schema);
 file_put_contents('schema.dot', $dot);
 ```
 
-`SchemaDotRenderer::render(Schema $schema, bool $inferGedmoTranslations = false): string`
+`SchemaDotRenderer::render(Schema $schema, bool $inferGedmoTranslations = false, bool $inferGedmoLogs = false): string`
 returns a complete DOT graph with no trailing newline. It does not connect to a
 database, launch Graphviz or write files. The console command adds a trailing newline.
 
-Pass `true` as the second argument to opt in to translation inference:
+Pass `true` as the second or third argument to opt in to translation or log inference:
 
 ```php
-$dot = $renderer->render($schema, inferGedmoTranslations: true);
+$dot = $renderer->render($schema, inferGedmoTranslations: true, inferGedmoLogs: true);
 ```
 
 Register custom types with DBAL before creating or introspecting the schema.

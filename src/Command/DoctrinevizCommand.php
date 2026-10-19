@@ -39,6 +39,12 @@ final class DoctrinevizCommand extends Command
                 InputOption::VALUE_NONE,
                 'Infer translation links without database foreign keys.',
             )
+            ->addOption(
+                'infer-gedmo-logs',
+                null,
+                InputOption::VALUE_NONE,
+                'Infer log links without database foreign keys.',
+            )
             ->setHelp('bin/console doctrine:schema:graphviz > schema.dot && dot -Tsvg schema.dot -o schema.svg');
     }
 
@@ -50,9 +56,11 @@ final class DoctrinevizCommand extends Command
             /** @var Connection $connection */
             $connection = $this->registry->getConnection($name);
             $schema = $connection->createSchemaManager()->introspectSchema();
-            /** @var bool $infer */
-            $infer = $input->getOption('infer-gedmo-translations');
-            $dot = $this->renderer->render($schema, $infer);
+            /** @var bool $translations */
+            $translations = $input->getOption('infer-gedmo-translations');
+            /** @var bool $logs */
+            $logs = $input->getOption('infer-gedmo-logs');
+            $dot = $this->renderer->render($schema, $translations, $logs);
         } catch (\Throwable) {
             // Driver exceptions may contain credentials, DSNs or private schema details.
             ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output)->writeln(

@@ -59,7 +59,7 @@ dot -Tpdf schema.dot -o schema.pdf
 - **Column details** include DBAL type, length, nullability, defaults and auto-increment.
 - **Relationships** preserve composite foreign-key column pairs and self-references.
 - **Named connections** through `--connection=reporting`.
-- **Optional translation links** through `--infer-gedmo-translations`.
+- **Optional Gedmo links** through `--infer-gedmo-translations` and `--infer-gedmo-logs`.
 - **Reusable renderer** accepts a DBAL `Schema` without booting Symfony.
 
 ## Contributing

@@ -22,10 +22,12 @@ apply to introspection.
 | --- | --- | --- |
 | `--connection=NAME` | Default Doctrine connection | Inspect a named DBAL connection. |
 | `--infer-gedmo-translations` | Off | Infer eligible translation links without database foreign keys. |
+| `--infer-gedmo-logs` | Off | Infer eligible log links without database foreign keys. |
 
 ```sh
 php bin/console doctrine:schema:graphviz --connection=reporting > reporting.dot
 php bin/console doctrine:schema:graphviz --infer-gedmo-translations > schema.dot
+php bin/console doctrine:schema:graphviz --infer-gedmo-translations --infer-gedmo-logs > schema.dot
 ```
 
 ## Reading the diagram
@@ -39,9 +41,15 @@ including composite keys. References to tables outside the introspected schema
 are omitted. Generated node and port identifiers keep SQL names out of DOT
 syntax; label content is escaped for Graphviz HTML labels.
 
-The optional Gedmo convention links a `<base>_translation.foreign_key` column to
-`<base>.id` only if both tables and columns exist and the translation table has
-no declared foreign keys. Actual database foreign keys always take precedence.
+The optional Gedmo conventions link a column to `<base>.id` only if both tables
+and the named columns exist and the inferred table has no declared foreign keys:
+
+- translations: `<base>_translation.foreign_key`;
+- logs: `<base>_log.object_id`, when the table also has an `object_class` column.
+
+Actual database foreign keys always take precedence. Tables whose name does not
+match the base table, such as the shared `ext_translations` and
+`ext_log_entries` tables, are not linked.
 
 ## Render other formats
 

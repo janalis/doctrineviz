@@ -79,4 +79,23 @@ final class Schemas
 
         return new Schema([$base, $translations]);
     }
+
+    public static function logs(): Schema
+    {
+        $base = Table::editor()
+            ->setUnquotedName('article')
+            ->setColumns(Column::editor()->setUnquotedName('id')->setTypeName('integer')->create())
+            ->create();
+        $logs = Table::editor()
+            ->setUnquotedName('article_log')
+            ->setColumns(
+                Column::editor()->setUnquotedName('id')->setTypeName('integer')->create(),
+                Column::editor()->setUnquotedName('object_id')->setTypeName('string')->setLength(64)->create(),
+                Column::editor()->setUnquotedName('object_class')->setTypeName('string')->setLength(191)->create(),
+                Column::editor()->setUnquotedName('data')->setTypeName('text')->create(),
+            )
+            ->create();
+
+        return new Schema([$base, $logs]);
+    }
 }

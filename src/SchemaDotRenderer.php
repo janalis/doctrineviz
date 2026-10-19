@@ -11,7 +11,7 @@ use Doctrine\DBAL\Schema\Table;
 
 final class SchemaDotRenderer
 {
-    public function render(Schema $schema, bool $inferGedmoTranslations = false): string
+    public function render(Schema $schema, bool $inferGedmoTranslations = false, bool $inferGedmoLogs = false): string
     {
         $lines = ['digraph database {', '  graph [rankdir=LR];', '  node [shape=plain];'];
         /** @var array<int, string> $nodes */
@@ -87,23 +87,57 @@ final class SchemaDotRenderer
                 }
             }
 
-            $name = $table->getObjectName()->toString();
-            if (
-                $inferGedmoTranslations
-                && $table->getForeignKeys() === []
-                && str_ends_with($name, '_translation')
-                && $table->hasColumn('foreign_key')
-            ) {
-                $base = substr($name, 0, -12);
-                if ($schema->hasTable($base) && $schema->getTable($base)->hasColumn('id')) {
-                    $lines[] = $this->edge($table, 'foreign_key', $schema->getTable($base), 'id', $nodes, $ports);
-                }
+            $inferred = [];
+            if ($inferGedmoTranslations) {
+                $inferred[] = $this->inferredEdge($schema, $table, '_translation', ['foreign_key'], $nodes, $ports);
             }
+            if ($inferGedmoLogs) {
+                $inferred[] = $this->inferredEdge(
+                    $schema,
+                    $table,
+                    '_log',
+                    ['object_id', 'object_class'],
+                    $nodes,
+                    $ports,
+                );
+            }
+            array_push($lines, ...array_filter($inferred));
         }
 
         $lines[] = '}';
 
         return implode("\n", $lines);
+    }
+
+    /** Links `<base><suffix>.<first column>` to `<base>.id` for a table without declared foreign keys.
+     *
+     * @param list<string>       $columns
+     * @param array<int, string> $nodes
+     * @param array<int, string> $ports
+     */
+    private function inferredEdge(
+        Schema $schema,
+        Table $table,
+        string $suffix,
+        array $columns,
+        array $nodes,
+        array $ports,
+    ): ?string {
+        $name = $table->getObjectName()->toString();
+        if ($table->getForeignKeys() !== [] || !str_ends_with($name, $suffix)) {
+            return null;
+        }
+        foreach ($columns as $column) {
+            if (!$table->hasColumn($column)) {
+                return null;
+            }
+        }
+        $base = substr($name, 0, -strlen($suffix));
+        if (!$schema->hasTable($base) || !$schema->getTable($base)->hasColumn('id')) {
+            return null;
+        }
+
+        return $this->edge($table, $columns[0], $schema->getTable($base), 'id', $nodes, $ports);
     }
 
     /** @param array<int, string> $nodes
