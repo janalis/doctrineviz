@@ -50,6 +50,21 @@ final class CommandTest extends TestCase
         self::assertStringContainsString('t1:c0:w -> t0:c0:w;', $tester->getDisplay());
     }
 
+    public function testLogInference(): void
+    {
+        $connection = DriverManager::getConnection(['driver' => 'pdo_sqlite', 'memory' => true]);
+        $connection->executeStatement('CREATE TABLE example (id INTEGER PRIMARY KEY)');
+        $connection->executeStatement('CREATE TABLE example_log (object_id VARCHAR(64), object_class VARCHAR(191))');
+        $connection->executeStatement('CREATE TABLE example_translation (foreign_key INTEGER)');
+        $registry = $this->createStub(ManagerRegistry::class);
+        $registry->method('getConnection')->willReturn($connection);
+        $tester = new CommandTester(new DoctrinevizCommand($registry, new SchemaDotRenderer()));
+        $tester->execute(['--infer-gedmo-logs' => true]);
+        self::assertSame(0, $tester->getStatusCode());
+        self::assertSame(1, substr_count($tester->getDisplay(), ' -> '));
+        self::assertStringContainsString('t1:c0:w -> t0:c0:w;', $tester->getDisplay());
+    }
+
     public function testFailureIsSanitizedEvenWithVerboseOutput(): void
     {
         $registry = $this->createMock(ManagerRegistry::class);
@@ -105,5 +120,11 @@ final class CommandTest extends TestCase
         );
         self::assertFalse($definition->getOption('infer-gedmo-translations')->acceptValue());
         self::assertFalse($definition->getOption('infer-gedmo-translations')->getDefault());
+        self::assertSame(
+            'Infer log links without database foreign keys.',
+            $definition->getOption('infer-gedmo-logs')->getDescription(),
+        );
+        self::assertFalse($definition->getOption('infer-gedmo-logs')->acceptValue());
+        self::assertFalse($definition->getOption('infer-gedmo-logs')->getDefault());
     }
 }

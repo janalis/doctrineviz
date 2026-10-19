@@ -5,6 +5,10 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+### Added
+
+- `--infer-gedmo-logs` links Gedmo Loggable `<base>_log.object_id` columns to `<base>.id`, alongside translation inference; `SchemaDotRenderer::render()` takes a matching `inferGedmoLogs` argument.
+
 ### Fixed
 
 - Use the version tag alone as the GitHub release title.
