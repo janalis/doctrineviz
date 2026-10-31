@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Janalis\Doctrineviz\Tests;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Janalis\Doctrineviz\ColumnDefault;
 use Janalis\Doctrineviz\Command\DoctrinevizCommand;
 use Janalis\Doctrineviz\DependencyInjection\DoctrinevizExtension;
 use Janalis\Doctrineviz\DoctrinevizBundle;
 use Janalis\Doctrineviz\SchemaDotRenderer;
+use Janalis\Doctrineviz\SchemaEntityDiagram;
+use Janalis\Doctrineviz\SchemaExporter;
+use Janalis\Doctrineviz\SchemaLinks;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -24,6 +28,10 @@ use Symfony\Component\HttpKernel\Kernel;
 #[CoversClass(DoctrinevizExtension::class)]
 #[UsesClass(DoctrinevizCommand::class)]
 #[UsesClass(SchemaDotRenderer::class)]
+#[UsesClass(SchemaExporter::class)]
+#[UsesClass(SchemaLinks::class)]
+#[UsesClass(ColumnDefault::class)]
+#[UsesClass(SchemaEntityDiagram::class)]
 final class BundleTest extends TestCase
 {
     public function testExtensionRegistersTheCommandAndRenderer(): void

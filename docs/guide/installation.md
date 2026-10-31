@@ -2,10 +2,12 @@
 
 ## Requirements
 
-- PHP 8.4 or newer within PHP 8.x.
+- PHP 8.5 or newer within PHP 8.x.
 - Symfony 7.4 or 8.x, DoctrineBundle 3.3+, and Doctrine DBAL 4.5+.
 - A configured Doctrine DBAL connection and its PHP database driver.
-- Graphviz only when rendering DOT to an image or PDF.
+- Nothing else to render images: [viz](https://janalis.github.io/viz/) draws SVG, PNG and PDF
+  natively. PNG needs `ext-gd` with FreeType. Graphviz, `mmdc` or PlantUML are only needed
+  with `--engine=cli`, or as a fallback for what the native renderer does not draw.
 
 Doctrine ORM is not required. The bundle reads schema metadata from the database;
 it does not generate SQL migrations or create tables.
@@ -30,7 +32,7 @@ read schema metadata; doctrineviz does not query application rows or write schem
 php bin/console doctrine:schema:graphviz --help
 ```
 
-## Install Graphviz
+## Install Graphviz (optional)
 
 ```sh
 brew install graphviz        # macOS
@@ -38,4 +40,5 @@ sudo apt install graphviz    # Debian / Ubuntu
 ```
 
 On other systems, use the [Graphviz downloads](https://graphviz.org/download/).
-The `dot` executable is separate from the Composer package.
+The `dot` executable is separate from the Composer package. It is needed only with
+`--engine=cli`, or to render a DOT file yourself.

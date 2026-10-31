@@ -1,0 +1,19 @@
+erDiagram
+    direction LR
+    author {
+        integer id PK "NOT NULL, auto_increment"
+        string(2) region PK "NOT NULL"
+    }
+    book {
+        integer id PK,FK "NOT NULL"
+        integer author_id FK "NOT NULL"
+        string(2) author_region FK "NOT NULL"
+        string(120) title "NULL, default <draft> & #quot;quoted#quot;"
+        integer zero "NOT NULL, default 0"
+        string zero_string "NOT NULL, default 0"
+        boolean enabled "NOT NULL, default false"
+        boolean published "NOT NULL, default true"
+        decimal price "NOT NULL, default 1.25"
+    }
+    book }o..|| author : ""
+    book |o--|| book : ""

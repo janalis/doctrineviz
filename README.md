@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Your database schema, drawn.</strong><br>
-  Doctrine DBAL · Graphviz DOT · Symfony bundle
+  Doctrine DBAL · Graphviz, Mermaid and PlantUML · SVG, PNG and PDF · Symfony bundle
 </p>
 
 <p align="center">
@@ -27,9 +27,10 @@
 ---
 
 doctrineviz reads your database schema through Doctrine DBAL and generates a
-Graphviz DOT diagram with tables, columns, primary keys and foreign keys.
-Run it in a Symfony application, or use the renderer directly with a DBAL
-schema. Doctrine ORM is optional.
+Graphviz, Mermaid or PlantUML diagram with tables, columns, primary keys and
+foreign keys, or renders it straight to SVG, PNG or PDF with
+[viz](https://janalis.github.io/viz/), natively in PHP. Run it in a Symfony
+application, or use the exporter directly with a DBAL schema. Doctrine ORM is optional.
 
 ## Install
 
@@ -38,17 +39,18 @@ composer require --dev janalis/doctrineviz
 ```
 
 Register `Janalis\Doctrineviz\DoctrinevizBundle::class` for the `dev` and
-`test` environments in `config/bundles.php`. Requires PHP 8.4+, Symfony
+`test` environments in `config/bundles.php`. Requires PHP 8.5+, Symfony
 7.4 or 8.x, DoctrineBundle 3.3+, and DBAL 4.5+.
 See [Installation](https://janalis.github.io/doctrineviz/guide/installation).
 
 ## Quick start
 
 ```sh
+php bin/console doctrine:schema:graphviz --output=schema.svg      # drawn natively, no Graphviz needed
+php bin/console doctrine:schema:graphviz --output=schema.pdf
+php bin/console doctrine:schema:graphviz --format=mermaid > schema.mmd
+php bin/console doctrine:schema:graphviz --format=plantuml > schema.puml
 php bin/console doctrine:schema:graphviz > schema.dot
-# Install Graphviz separately to render the DOT file.
-dot -Tsvg schema.dot -o schema.svg
-dot -Tpdf schema.dot -o schema.pdf
 ```
 
 ![Example database diagram](docs/public/example.svg)
@@ -56,11 +58,13 @@ dot -Tpdf schema.dot -o schema.pdf
 ## Highlights
 
 - **Database schema diagrams** show the actual schema, including tables not mapped by ORM.
+- **Three languages**: Graphviz DOT, a Mermaid `erDiagram` and a PlantUML entity diagram, with cardinalities.
+- **Images without tools**: `--output=schema.svg|png|pdf` renders natively; `--engine=cli` uses `dot`, `mmdc` or `plantuml` instead.
 - **Column details** include DBAL type, length, nullability, defaults and auto-increment.
 - **Relationships** preserve composite foreign-key column pairs and self-references.
 - **Named connections** through `--connection=reporting`.
 - **Optional Gedmo links** through `--infer-gedmo-translations` and `--infer-gedmo-logs`.
-- **Reusable renderer** accepts a DBAL `Schema` without booting Symfony.
+- **Reusable exporter** accepts a DBAL `Schema` without booting Symfony.
 
 ## Contributing
 
