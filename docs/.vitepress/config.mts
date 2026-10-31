@@ -32,7 +32,7 @@ export default defineConfig({
         { text: 'Installation', link: '/guide/installation' },
         { text: 'Command reference', link: '/guide/usage' },
         { text: 'PHP API', link: '/guide/php-api' },
-        { text: 'Migration from 0.3.x', link: '/guide/migration' },
+        { text: 'Migration', link: '/guide/migration' },
       ] },
       { text: 'Contributing', items: [
         { text: 'Development', link: '/contributing/development' },

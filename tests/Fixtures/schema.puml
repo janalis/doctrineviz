@@ -1,0 +1,20 @@
+@startuml
+left to right direction
+entity author {
+  * id : integer <<PK>> // NOT NULL, auto_increment
+  {field} * region : string(2) <<PK>> // NOT NULL
+}
+entity book {
+  * id : integer <<PK>> <<FK>> // NOT NULL
+  author_id : integer <<FK>> // NOT NULL
+  {field} author_region : string(2) <<FK>> // NOT NULL
+  {field} title : string(120) // NULL, default <draft> & 'quoted'
+  zero : integer // NOT NULL, default 0
+  zero_string : string // NOT NULL, default 0
+  enabled : boolean // NOT NULL, default false
+  published : boolean // NOT NULL, default true
+  price : decimal // NOT NULL, default 1.25
+}
+book }o..|| author
+book |o--|| book
+@enduml

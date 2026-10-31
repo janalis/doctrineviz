@@ -8,12 +8,19 @@ use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\ForeignKeyConstraint;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableEditor;
+use Janalis\Doctrineviz\ColumnDefault;
 use Janalis\Doctrineviz\SchemaDotRenderer;
+use Janalis\Doctrineviz\SchemaLink;
+use Janalis\Doctrineviz\SchemaLinks;
 use Janalis\Doctrineviz\Tests\Fixtures\Schemas;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(SchemaDotRenderer::class)]
+#[CoversClass(SchemaLinks::class)]
+#[UsesClass(SchemaLink::class)]
+#[UsesClass(ColumnDefault::class)]
 final class GedmoLogInferenceTest extends TestCase
 {
     public function testGedmoLogInferenceIsOptInAndIndependent(): void

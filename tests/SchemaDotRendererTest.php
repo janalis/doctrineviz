@@ -12,13 +12,19 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableEditor;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Type;
+use Janalis\Doctrineviz\ColumnDefault;
 use Janalis\Doctrineviz\SchemaDotRenderer;
+use Janalis\Doctrineviz\SchemaLink;
+use Janalis\Doctrineviz\SchemaLinks;
 use Janalis\Doctrineviz\Tests\Fixtures\Schemas;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 
 #[CoversClass(SchemaDotRenderer::class)]
+#[CoversClass(SchemaLinks::class)]
+#[CoversClass(SchemaLink::class)]
+#[CoversClass(ColumnDefault::class)]
 final class SchemaDotRendererTest extends TestCase
 {
     public function testEmptySchema(): void

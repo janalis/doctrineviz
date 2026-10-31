@@ -5,6 +5,14 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+**Breaking:** PHP 8.5 is required, as viz requires it. `DoctrinevizCommand` takes a `SchemaExporter` as its second argument instead of a `SchemaDotRenderer`.
+
+### Added
+
+- `--format=mermaid` and `--format=plantuml` write the schema as a Mermaid `erDiagram` or a PlantUML entity diagram, with keys, nullability, defaults and relationship cardinalities, through [viz](https://janalis.github.io/viz/). `SchemaExporter` and `SchemaEntityDiagram` do the same from PHP.
+- `--output=PATH` writes to a file: `.svg`, `.png` and `.pdf` render the diagram natively, with no Graphviz needed; any other extension writes the source, in the format the extension names when `--format` is not given.
+- `--engine=auto|native|cli` chooses how images render: natively with the command-line tool as the fallback, or either alone.
+
 ## [0.4.2] - 2026-10-19
 
 ### Added
