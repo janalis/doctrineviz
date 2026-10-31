@@ -2,13 +2,13 @@
 left to right direction
 entity author {
   * id : integer <<PK>> // NOT NULL, auto_increment
-  * region : string(2) <<PK>> // NOT NULL
+  {field} * region : string(2) <<PK>> // NOT NULL
 }
 entity book {
   * id : integer <<PK>> <<FK>> // NOT NULL
   author_id : integer <<FK>> // NOT NULL
-  author_region : string(2) <<FK>> // NOT NULL
-  title : string(120) // NULL, default <draft> & 'quoted'
+  {field} author_region : string(2) <<FK>> // NOT NULL
+  {field} title : string(120) // NULL, default <draft> & 'quoted'
   zero : integer // NOT NULL, default 0
   zero_string : string // NOT NULL, default 0
   enabled : boolean // NOT NULL, default false
