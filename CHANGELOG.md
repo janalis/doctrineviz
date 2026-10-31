@@ -5,6 +5,8 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-31
+
 **Breaking:** PHP 8.5 is required, as viz requires it. `DoctrinevizCommand` takes a `SchemaExporter` as its second argument instead of a `SchemaDotRenderer`.
 
 ### Added
