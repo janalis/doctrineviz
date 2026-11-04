@@ -29,7 +29,7 @@
     "require-dev": {
         "carthage-software/mago": "^1.57",
         "infection/infection": "^0.35.8",
-        "phpunit/phpunit": "^12.5",
+        "phpunit/phpunit": "^13.4",
         "symfony/framework-bundle": "^7.4 || ^8.0",
         "symfony/process": "^8.0"
     },
