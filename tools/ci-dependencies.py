@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 
 version = sys.argv[1]
-if version not in ("7.4.*", "8.0.*", "8.1.*"):
+if version not in ("7.4.*", "8.1.*"):
     raise SystemExit("Unsupported Symfony test series")
 path = Path("composer.json")
 data = json.loads(path.read_text())
