@@ -521,16 +521,16 @@
         },
         {
             "name": "janalis/viz",
-            "version": "v0.2.2",
+            "version": "v0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janalis/viz.git",
-                "reference": "6a98b756368bb377d036f49f3dfb2c9d77b8d49f"
+                "reference": "d92fa1e25829ec0f4fa20e1d1ab69823a712c049"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janalis/viz/zipball/6a98b756368bb377d036f49f3dfb2c9d77b8d49f",
-                "reference": "6a98b756368bb377d036f49f3dfb2c9d77b8d49f",
+                "url": "https://api.github.com/repos/janalis/viz/zipball/d92fa1e25829ec0f4fa20e1d1ab69823a712c049",
+                "reference": "d92fa1e25829ec0f4fa20e1d1ab69823a712c049",
                 "shasum": ""
             },
             "require": {
@@ -577,7 +577,7 @@
                 "issues": "https://github.com/janalis/viz/issues",
                 "source": "https://github.com/janalis/viz"
             },
-            "time": "2026-10-31T08:48:33+00:00"
+            "time": "2026-11-07T17:29:41+00:00"
         },
         {
             "name": "psr/cache",
