@@ -40,7 +40,7 @@ composer require --dev janalis/doctrineviz
 
 Register `Janalis\Doctrineviz\DoctrinevizBundle::class` for the `dev` and
 `test` environments in `config/bundles.php`. Requires PHP 8.5+, Symfony
-7.4 or 8.x, DoctrineBundle 3.3+, and DBAL 4.5+.
+7.4.23+ or 8.1.11+, DoctrineBundle 3.3+, and DBAL 4.5+.
 See [Installation](https://janalis.github.io/doctrineviz/guide/installation).
 
 ## Quick start

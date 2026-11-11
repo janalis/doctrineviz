@@ -3,7 +3,7 @@
 ## Requirements
 
 - PHP 8.5 or newer within PHP 8.x.
-- Symfony 7.4 or 8.x, DoctrineBundle 3.3+, and Doctrine DBAL 4.5+.
+- Symfony 7.4.23+ or 8.1.11+, DoctrineBundle 3.3+, and Doctrine DBAL 4.5+.
 - A configured Doctrine DBAL connection and its PHP database driver.
 - Nothing else to render images: [viz](https://janalis.github.io/viz/) draws SVG, PNG and PDF
   natively. PNG needs `ext-gd` with FreeType. Graphviz, `mmdc` or PlantUML are only needed
