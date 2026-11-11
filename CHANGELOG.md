@@ -5,6 +5,8 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-11-11
+
 ### Changed
 
 - Symfony 8.0 is no longer supported: it is end of life, and the November 2026 Symfony security advisories affect every 8.0 release. The minimum versions are now Symfony 7.4.23 and 8.1.11, the first releases that fix those advisories; `symfony/filesystem`, which viz requires at 8.x, needs 8.1.11.
