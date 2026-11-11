@@ -5,6 +5,11 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+### Changed
+
+- Symfony 8.0 is no longer supported: it is end of life, and the November 2026 Symfony security advisories affect every 8.0 release. The minimum versions are now Symfony 7.4.23 and 8.1.11, the first releases that fix those advisories; `symfony/filesystem`, which viz requires at 8.x, needs 8.1.11.
+- doctrineviz conflicts with `symfony/doctrine-bridge` before 7.3. DoctrineBundle still allows bridge 6.4, which fails to compile the container next to Symfony 8.
+
 ## [0.5.0] - 2026-10-31
 
 **Breaking:** PHP 8.5 is required, as viz requires it. `DoctrinevizCommand` takes a `SchemaExporter` as its second argument instead of a `SchemaDotRenderer`.
