@@ -5,6 +5,10 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+### Changed
+
+- viz 0.2.4 is required: it requires `symfony/yaml` 8.1.11, which fixes that parser's parse-time advisory, and reads Mermaid class diagrams without a deprecation on PHP 8.6.
+
 ## [0.5.1] - 2026-11-11
 
 ### Changed

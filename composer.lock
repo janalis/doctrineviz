@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a9d5f9e91f41b1eb4850b087f870698e",
+    "content-hash": "196d1d82e8181675b2d2d23d6d6f8cb0",
     "packages": [
         {
             "name": "doctrine/dbal",
@@ -521,16 +521,16 @@
         },
         {
             "name": "janalis/viz",
-            "version": "v0.2.3",
+            "version": "v0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janalis/viz.git",
-                "reference": "d92fa1e25829ec0f4fa20e1d1ab69823a712c049"
+                "reference": "89e9f668d57be61e331056f3bd0478ed91c7a6e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janalis/viz/zipball/d92fa1e25829ec0f4fa20e1d1ab69823a712c049",
-                "reference": "d92fa1e25829ec0f4fa20e1d1ab69823a712c049",
+                "url": "https://api.github.com/repos/janalis/viz/zipball/89e9f668d57be61e331056f3bd0478ed91c7a6e7",
+                "reference": "89e9f668d57be61e331056f3bd0478ed91c7a6e7",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +540,7 @@
                 "symfony/polyfill-intl-grapheme": "^1.33",
                 "symfony/process": "^8.0",
                 "symfony/string": "^8.0",
-                "symfony/yaml": "^8.1"
+                "symfony/yaml": "^8.1.11"
             },
             "require-dev": {
                 "carthage-software/mago": "1.59.*",
@@ -577,7 +577,8 @@
                 "issues": "https://github.com/janalis/viz/issues",
                 "source": "https://github.com/janalis/viz"
             },
-            "time": "2026-11-07T17:29:41+00:00"
+            "time": "2026-11-21T04:01:50+00:00",
+            "published-time": "2026-11-21T04:01:55+00:00"
         },
         {
             "name": "psr/cache",
@@ -1288,7 +1289,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-16T14:15:10+00:00"
+            "time": "2026-09-16T14:15:10+00:00",
+            "published-time": "2026-11-04T11:25:34+00:00"
         },
         {
             "name": "symfony/doctrine-bridge",
@@ -2196,7 +2198,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-04-10T16:19:22+00:00"
+            "time": "2026-04-10T16:19:22+00:00",
+            "published-time": "2026-04-26T14:44:50+00:00"
         },
         {
             "name": "symfony/polyfill-deepclone",
@@ -2365,7 +2368,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-15T09:18:53+00:00"
+            "time": "2026-10-15T09:18:53+00:00",
+            "published-time": "2026-10-28T10:07:44+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
@@ -2450,7 +2454,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-09-23T22:02:09+00:00"
+            "time": "2026-09-23T22:02:09+00:00",
+            "published-time": "2026-09-30T10:23:47+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2535,7 +2540,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-28T09:35:49+00:00"
+            "time": "2026-10-28T09:35:49+00:00",
+            "published-time": "2026-10-28T10:07:45+00:00"
         },
         {
             "name": "symfony/polyfill-php85",
@@ -2937,7 +2943,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-23T17:06:53+00:00"
+            "time": "2026-10-23T17:06:53+00:00",
+            "published-time": "2026-10-28T18:24:27+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -3183,7 +3190,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-11-04T08:39:20+00:00"
+            "time": "2026-11-04T08:39:20+00:00",
+            "published-time": "2026-11-04T11:31:03+00:00"
         }
     ],
     "packages-dev": [
@@ -6609,5 +6617,5 @@
         "php": "^8.5"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
