@@ -5,6 +5,10 @@ User-visible changes are recorded here. Versions follow semantic versioning;
 
 ## [Unreleased]
 
+### Changed
+
+- viz 0.2.7 is required: its native Graphviz layout follows `dot` more closely (ranks, crossings, edge labels) and supports `clusterrank`.
+
 ## [0.5.2] - 2026-11-21
 
 ### Changed
