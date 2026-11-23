@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "196d1d82e8181675b2d2d23d6d6f8cb0",
+    "content-hash": "76dfcc702a3e41ce6039ef8b7b20cdc9",
     "packages": [
         {
             "name": "doctrine/dbal",
@@ -521,16 +521,16 @@
         },
         {
             "name": "janalis/viz",
-            "version": "v0.2.4",
+            "version": "v0.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janalis/viz.git",
-                "reference": "89e9f668d57be61e331056f3bd0478ed91c7a6e7"
+                "reference": "cdfc9cf04ba44011e98a3fc6c4f8dd2fd81643a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janalis/viz/zipball/89e9f668d57be61e331056f3bd0478ed91c7a6e7",
-                "reference": "89e9f668d57be61e331056f3bd0478ed91c7a6e7",
+                "url": "https://api.github.com/repos/janalis/viz/zipball/cdfc9cf04ba44011e98a3fc6c4f8dd2fd81643a2",
+                "reference": "cdfc9cf04ba44011e98a3fc6c4f8dd2fd81643a2",
                 "shasum": ""
             },
             "require": {
@@ -577,8 +577,8 @@
                 "issues": "https://github.com/janalis/viz/issues",
                 "source": "https://github.com/janalis/viz"
             },
-            "time": "2026-11-21T04:01:50+00:00",
-            "published-time": "2026-11-21T04:01:55+00:00"
+            "time": "2026-11-23T16:08:59+00:00",
+            "published-time": "2026-11-23T16:09:05+00:00"
         },
         {
             "name": "psr/cache",
